@@ -1,0 +1,28 @@
+@()
+<split direction="horizontal"
+(dragProgress)="uiStateStore.setResizeView($event)">
+    <split-area [visible]="(uiStateStore.viewsVisible | async).visualise || (uiStateStore.viewsVisible | async).mobilise">
+        <split direction="vertical" (dragProgress)="uiStateStore.setResizeView($event)">
+            <split-area [visible]="(uiStateStore.viewsVisible | async).visualise">
+                <ws-view [name]="uiId.VISUALISE" ></ws-view>
+            </split-area>
+            <split-area class="wsview" [visible]="(uiStateStore.viewsVisible | async).mobilise">
+                <ws-view [name]="uiId.MOBILISE" ></ws-view>
+            </split-area>
+        </split>
+    </split-area>
+    <split-area [visible]="(uiStateStore.viewsVisible | async).analyse">
+        <ws-view [name]="uiId.ANALYSE" ></ws-view>
+    </split-area>
+</split>
+
+
+<p-growl
+[value]="(uiStateStore.displayMesssages | async).messages"
+[sticky]="(uiStateStore.displayMesssages | async).sticky"
+[life]="(uiStateStore.displayMesssages | async).delay"
+></p-growl>
+
+
+
+

@@ -1,14 +1,51 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Dcswebapp</title>
-  <base href="/">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="dcs" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="dcs" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="dcs" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html lang="en" ng-app="dcs" class="no-js"> <!--<![endif]-->
+<head>
+    <base href="/">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Alambeek</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("lib/bootstrap/dist/css/bootstrap.min.css")" />
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("lib/font-awesome/css/font-awesome.min.css")" />
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("lib/vis/dist/vis.min.css")" />
+
+    @*<link rel="stylesheet" media="screen" href="@routes.Assets.versioned("lib/primeui/themes/omega/theme.css")" />*@
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("lib/leaflet/dist/leaflet.css")" />
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("lib/primeng/resources/primeng.min.css")" />
+
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/app-theme.css")"/>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("layout/css/layout-blue.css")"/>
+
+    <script src="@routes.Assets.versioned("lib/core-js/client/shim.min.js")"></script>
+    <script src="@routes.Assets.versioned("lib/zone.js/dist/zone.js")"></script>
+    <script src="@routes.Assets.versioned("lib/reflect-metadata/Reflect.js")"></script>
+    <script src="@routes.Assets.versioned("lib/systemjs/dist/system.src.js")"></script>
+
+    <script src="@routes.Assets.versioned("lib/vis/dist/vis.min.js")"></script>
+    <script src="@routes.Assets.versioned("lib/leaflet/dist/leaflet.js")"></script>
+    <script src="@routes.Assets.versioned("lib/plotly.js/dist/plotly.min.js")"></script>
+
+    <script src="@routes.Assets.versioned("lib/keycloak-js/dist/keycloak.min.js")"></script>
+    <script src="@routes.Assets.versioned("lib/keycloak-js/dist/keycloak-authz.js")"></script>
+    <script src="@routes.Assets.versioned("javascripts/systemjs.config.js")"></script>
+    <script>
+      System.import('app').catch(function(err){ console.error(err); });
+    </script>
 </head>
 <body>
-  <app-root></app-root>
+    <app>
+        <div class="splash-screen">
+            <div class="splash-loader">
+                @*<img src="assets/layout/images/logo-loading.png">*@
+            </div>
+        </div>
+    </app>
+
 </body>
-</html>

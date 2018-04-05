@@ -1,0 +1,6 @@
+@()
+<vis-tabs
+class="fill"
+*ngIf="uiStateStore.selectedProcessorId | async"
+[selectedVisType]="uiStateStore.selectedVisType | async">
+</vis-tabs>

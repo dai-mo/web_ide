@@ -1,0 +1,29 @@
+@()
+<div class="schema-panel">
+    <p-tree
+    [value]="nodes"
+    [selectionMode]="selectionMode"
+    [(selection)]="selectedNodes"
+    [propagateSelectionDown]="true"
+    (onNodeSelect)="updateNode($event)"
+    (onNodeUnselect)="updateNode($event)">
+        <ng-template
+        let-node
+        pTemplate="default">
+            <div
+            pDroppable="p-schema-params"
+            (onDrop)="nodeDrop($event, node)">
+                {{node.label}} <i class="text-primary">{{nodeType(node)}}</i>
+            </div>
+        </ng-template>
+        <ng-template let-node [pTemplate]="scp._FIELDS_TO_MAP">
+            <fields-to-map [processorField]="node.data"></fields-to-map>
+            <i class="material-icons" (click)="removeLink(node)">close</i>
+        </ng-template>
+        <ng-template let-node [pTemplate]="scp._FIELD_ACTIONS">
+            <field-actions [processorField]="node.data"></field-actions>
+            <i class="material-icons" (click)="removeLink(node)">close</i>
+        </ng-template>
+    </p-tree>
+    <div [hidden]="nodes.length > 0">No schema set for this Processor</div>
+</div>

@@ -1,0 +1,40 @@
+@()
+
+<div *ngFor="let rel of rels" >
+    <div class="ui-g" *ngIf="uiStateStore.isRelationshipsInfoDialogVisible">
+        <div class="ui-g-4"><i class="text-primary" [attr.for]="rel.id">{{rel.id}}</i></div>
+        <div class="ui-g-8"><span [id]="rel.id">{{destination(rel)}}</span></div>
+    </div>
+    <div class="ui-g" *ngIf="uiStateStore.isRelationshipsSettingsDialogVisible">
+        <p-radioButton
+        name="relgroup"
+        [value]="rel.id"
+        [label]="label(rel)"
+        [(ngModel)]="selectedRel"></p-radioButton>
+    </div>
+
+</div>
+
+<p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+        <button pButton
+        type="button"
+        (click)="save()"
+        [disabled]="selectedRel === undefined"
+        [hidden]="!uiStateStore.isRelationshipsSettingsDialogVisible"
+        label="Save">
+        </button>
+        <button pButton
+        type="button"
+        (click)="cancel()"
+        [hidden]="!uiStateStore.isRelationshipsSettingsDialogVisible"
+        label="Cancel">
+        </button>
+        <button pButton
+        type="button"
+        (click)="ok()"
+        [hidden]="!uiStateStore.isRelationshipsInfoDialogVisible"
+        label="Ok">
+        </button>
+    </div>
+</p-footer>
