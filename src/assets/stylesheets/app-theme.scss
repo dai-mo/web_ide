@@ -1,0 +1,23 @@
+@import "../theme/theme-dark-green";
+
+body {
+  .disable-highlight {
+    &:focus {
+      outline: 0 none;
+      background-color: lighten($primaryColor, 0%);
+    }
+  }
+
+  p-footer .ui-dialog-buttonpane {
+    border: none;
+  }
+
+  //FIXME: Currently, z-index of growl element is less than the
+  //dialog element. This issue has been raised at -
+  //https://github.com/primefaces/primeng/issues/2626
+  //For the moment, the work-around is to override the dynamically
+  //created value to an insanely high one
+  .ui-growl {
+    z-index: 99999999999 !important;
+  }
+}
