@@ -1,0 +1,39 @@
+<p-panel>
+  <p-header>
+    <div class="ui-helper-clearfix">
+      <div class="ui-toolbar-group-left">
+        <span class="ui-panel-title">{{name}}</span>
+        <button pButton type="button" icon="font-awesome fa-file-image-o" class="flat disable-highlight" (click)="uiStateStore.makeViewVisible(uiId.VISUALISE)"
+          [hidden]="(uiStateStore.viewsVisible | async).visualise">
+        </button>
+        <button pButton type="button" icon="font-awesome fa-table" class="flat disable-highlight" (click)="uiStateStore.makeViewVisible(uiId.MOBILISE)"
+          [hidden]="(uiStateStore.viewsVisible | async).mobilise">
+        </button>
+        <button pButton type="button" icon="font-awesome fa-sitemap" class="flat disable-highlight" (click)="uiStateStore.makeViewVisible(uiId.ANALYSE)"
+          [hidden]="(uiStateStore.viewsVisible | async).analyse">
+        </button>
+      </div>
+
+      <div class="ui-toolbar-group-right">
+        <button pButton type="button" icon="font-awesome fa-window-maximize" class="flat disable-highlight" (click)="maximiseView($event, name)">
+        </button>
+      </div>
+
+      <div *ngIf="contextStore.contextMenuObs(name) | async as items" class="ui-toolbar-group-right">
+        <p-menu #menu appendTo="body" popup="popup" [model]="items"></p-menu>
+        <button pButton type="button" icon="font-awesome fa-bars" class="flat disable-highlight" (click)="menu.toggle($event)">
+        </button>
+      </div>
+      <div *ngFor="let cbItem of contextStore.contextBarObs(name) | async" class="ui-toolbar-group-right">
+        <button *ngIf="(flowTabs | async).length > 0" pButton type="button" icon="font-awesome {{cbItem.iconClass}}" class="flat disable-highlight"
+          (click)="cbItem.command($event)" [disabled]="!cbItem.enabled" [hidden]="oss.hideContextBarItem(cbItem) | async">
+        </button>
+      </div>
+    </div>
+  </p-header>
+  <div class="flex-panel fill" [ngSwitch]="name">
+    <visualise *ngSwitchCase="'visualise'"></visualise>
+    <mobilise *ngSwitchCase="'mobilise'"></mobilise>
+    <analyse *ngSwitchCase="'analyse'"></analyse>
+  </div>
+</p-panel>

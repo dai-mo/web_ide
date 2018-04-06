@@ -16,7 +16,8 @@ import {Observable} from "rxjs/Rx"
 
 @Component({
   selector: "map",
-  templateUrl: "partials/visualise/map.html",
+  templateUrl: "./map.component.html",
+  styleUrls: ["./map.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapComponent implements AfterViewInit,  OnDestroy {

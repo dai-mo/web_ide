@@ -1,0 +1,11 @@
+<div class="fill" *ngIf="hasResults()">
+  <p-dataTable [value]="results" scrollable="true" scrollHeight="100%" scrollWidth="100%" [loading]="loading" loadingIcon="fa-spinner">
+    <p-column [style]="{'width':'50px'}">
+      <ng-template let-result="rowData" pTemplate="body">
+        <i class="material-icons" pTooltip="id: {{result.id}}" tooltipPosition="right">info</i>
+      </ng-template>
+    </p-column>
+    <p-column [style]="{'width':'250px'}" *ngFor="let col of columns" [field]="col" [header]="col">
+    </p-column>
+  </p-dataTable>
+</div>

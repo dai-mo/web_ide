@@ -1,0 +1,43 @@
+<div class="fill">
+  <p-tabView class="fill" (onChange)="selectActiveTab($event.index)">
+    @*Workaround for https://github.com/primefaces/primeng/issues/2000*@ @*
+    <p-tabPanel class="fill" *ngIf="(flowTabs | async).length === 0" *@ @*header="..." *@ @*selected="true">*@ @*Instantiate flow from template or create a new flow*@ @*
+    </p-tabPanel>*@
+
+    <p-tabPanel class="fill" *ngFor="let tabz of flowTabs | async" [header]="tabz.title" [selected]="tabz.active" [disabled]="tabz.disabled"
+      [hidden]="!tabz.active">
+      <div class="flex-panel-parent">
+        <div pTooltip="{{tabz.id}}" tooltipPosition="top" class="pull-left" [ngClass]="{green: isRunning(tabz), red: isStopped(tabz), black: isNotStarted(tabz)}">
+          {{tabz.name}}
+          <span class="label label-default" [hidden]="!(oss.connectMode$() | async)">
+            Connect Mode
+          </span>
+        </div>
+        <div class="flex-panel" flow-graph [showFlowInstance]="tabz.flowInstance">Content</div>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+</div>
+
+<p-dialog class="dialog-panel" header="Processor Properties" width="900" [resizable]="false" [closable]="false" [(visible)]="oss.visibility().isProcessorPropertiesDialogVisible"
+  *ngIf="oss.visibility().isProcessorPropertiesDialogVisible">
+  <flow-entity finaliseLabel="Update">
+  </flow-entity>
+</p-dialog>
+
+<p-dialog class="dialog-panel" header="Processors" width="900" [resizable]="false" [closable]="false" [(visible)]="uiStateStore.isProcessorConfDialogVisible"
+  *ngIf="uiStateStore.isProcessorConfDialogVisible">
+  <flow-entity finaliseLabel="Add">
+  </flow-entity>
+</p-dialog>
+
+<p-dialog class="dialog-panel" header="Processor Details" width="900" [resizable]="false" [closable]="false" [(visible)]="uiStateStore.isProcessorInfoDialogVisible"
+  *ngIf="uiStateStore.isProcessorInfoDialogVisible">
+  <flow-entity finaliseLabel="Ok">
+  </flow-entity>
+</p-dialog>
+
+<p-dialog class="dialog-panel" header="Relationships" width="600" [resizable]="false" [closable]="false" [(visible)]="uiStateStore.isRelationshipsInfoDialogVisible || uiStateStore.isRelationshipsSettingsDialogVisible"
+  *ngIf="uiStateStore.isRelationshipsInfoDialogVisible || uiStateStore.isRelationshipsSettingsDialogVisible">
+  <relationships></relationships>
+</p-dialog>

@@ -13,7 +13,8 @@ declare var Plotly: any
 
 @Component({
   selector: "chart",
-  templateUrl: "partials/visualise/chart.html"
+  templateUrl: "./chart.component.html",
+  styleUrls: ["./chart.component.scss"]
 })
 
 export class ChartComponent implements AfterViewInit,  OnDestroy{
