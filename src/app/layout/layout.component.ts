@@ -8,7 +8,7 @@ import { UIStateStore } from "./shared/ui.state.store";
 @Component({
   selector: "app",
   templateUrl: "./layout.component.html",
-  styleUrls: ["layout.component.scss"]
+  styleUrls: ["./layout.component.scss"]
 })
 export class LayoutComponent {
   uiId = UiId;
