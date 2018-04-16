@@ -2,32 +2,32 @@
  * Created by cmathew on 29/07/16.
  */
 
-import {Injectable, NgZone} from "@angular/core"
-import {EntityType, FlowGraph} from "../flow.model"
-import {UIStateStore} from "../../shared/ui.state.store"
-import {SELECT_ENTITY, SELECT_PROCESSOR_TO_CONNECT} from "../../store/reducers"
-import {ObservableState} from "../../store/state"
+import { Injectable, NgZone } from "@angular/core"
+
+import { FlowGraph } from "../model/flow.model"
+import { UIStateStore } from "../../state/ui.state.store"
+import { ObservableState } from "../../state/state"
+import { SELECT_ENTITY } from "../../state/reducers";
 
 declare var vis: any
 
 @Injectable()
 export class FlowGraphService {
+  constructor(
+    private uiStateStore: UIStateStore,
+    private oss: ObservableState,
+    private ngZone: NgZone
+  ) {}
 
-  constructor(private uiStateStore: UIStateStore,
-              private oss: ObservableState,
-              private ngZone: NgZone) {
+  addFlatGraph(el: HTMLElement, graph: FlowGraph): any {
+    const uiss = this.uiStateStore
+    const oss = this.oss
 
-  }
-
-  addFlatGraph(el:HTMLElement, graph: FlowGraph): any {
-    let uiss = this.uiStateStore
-    let oss = this.oss
-
-    let data = {
+    const data = {
       nodes: graph.nodes,
       edges: graph.edges
     }
-    let options = {
+    const options = {
       // FIXME: Normally the autoResize value should be set to true,
       //        but if this is done then we get a weird rendering effect
       //        on Firefox where the graph moves automatically and extends
@@ -67,10 +67,10 @@ export class FlowGraphService {
         addNode: false,
         deleteNode: false,
         editEdge: false,
-        addEdge: function (data: any, callback: any) {
-          if (data.from === data.to)
+        addEdge: function(visdata: any, callback: any) {
+          if (visdata.from === visdata.to) {
             return
-          else {
+          } else {
             oss.dispatch({
               type: SELECT_ENTITY,
               payload: {
@@ -78,67 +78,65 @@ export class FlowGraphService {
                 type: EntityType.PROCESSOR
               }
             })
-            oss.dispatch({type: SELECT_PROCESSOR_TO_CONNECT, payload: {id: data.to}})
+            oss.dispatch({
+              type: SELECT_PROCESSOR_TO_CONNECT,
+              payload: { id: data.to }
+            })
             uiss.isRelationshipsSettingsDialogVisible = true
             return
           }
         }
       }
     }
-    let network = this.ngZone.runOutsideAngular(() => new vis.Network(el, data, options))
+    let network = this.ngZone.runOutsideAngular(
+      () => new vis.Network(el, data, options)
+    )
 
-    this.oss.connectMode$()
-      .subscribe(
-        (connectMode: boolean) => {
-          if(connectMode)
-            network.addEdgeMode()
-          else
-            network.disableEditMode()
-        }
-      )
+    this.oss.connectMode$().subscribe((connectMode: boolean) => {
+      if (connectMode) network.addEdgeMode()
+      else network.disableEditMode()
+    })
 
-    network.on("resize", function (params: any) {
+    network.on("resize", function(params: any) {
       this.fit()
     })
 
-    network.on("click", function (params: any) {
-      let selectedNodes = params.nodes
-      let selectedEdges = params.edges
+    network.on(
+      "click",
+      function(params: any) {
+        let selectedNodes = params.nodes
+        let selectedEdges = params.edges
 
-      if (selectedNodes.length > 0) {
-        let pid = selectedNodes[0]
-        oss.dispatch({
-          type: SELECT_ENTITY,
-          payload: {
-            id: pid,
-            type: EntityType.PROCESSOR
-          }
-        })
-      }
-      else if (selectedEdges.length > 0) {
-        let cid = selectedEdges[0]
-        oss.dispatch({
-          type: SELECT_ENTITY,
-          payload: {
-            id: cid,
-            type: EntityType.CONNECTION
-          }
-        })
-      }
-      else {
-        oss.dispatch({
-          type: SELECT_ENTITY,
-          payload: {
-            id: this.oss.activeFlowTab().flowInstance.id,
-            type: EntityType.FLOW_INSTANCE
-          }
-        })
-      }
-    }.bind(this))
-
-
+        if (selectedNodes.length > 0) {
+          let pid = selectedNodes[0]
+          oss.dispatch({
+            type: SELECT_ENTITY,
+            payload: {
+              id: pid,
+              type: EntityType.PROCESSOR
+            }
+          })
+        } else if (selectedEdges.length > 0) {
+          let cid = selectedEdges[0]
+          oss.dispatch({
+            type: SELECT_ENTITY,
+            payload: {
+              id: cid,
+              type: EntityType.CONNECTION
+            }
+          })
+        } else {
+          oss.dispatch({
+            type: SELECT_ENTITY,
+            payload: {
+              id: this.oss.activeFlowTab().flowInstance.id,
+              type: EntityType.FLOW_INSTANCE
+            }
+          })
+        }
+      }.bind(this)
+    )
 
     return network
   }
-
 }

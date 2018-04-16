@@ -1,11 +1,19 @@
-import {Observable} from "rxjs/Rx"
-import {Injectable, NgZone} from "@angular/core"
-import {FlowComponent, Connection, Entity, EntityType, FlowInstance, FlowTab, Processor} from "../analyse/flow.model"
-import {Action, Store} from "@ngrx/store"
-import {ContextBarItem, FlowEntityConf, UiId, Visibility} from "../shared/ui.models"
-import {ImmutableArray, ImmutableObject} from "seamless-immutable"
+import {
+  Connection,
+  FlowComponent,
+  FlowTab,
+  EntityType
+} from "./../analyse/model/flow.model"
+import { Observable } from "rxjs/Observable"
+import { Injectable, NgZone } from "@angular/core"
+
+import { Action, Store } from "@ngrx/store"
+
+import { ImmutableArray, ImmutableObject } from "seamless-immutable"
 import * as SI from "seamless-immutable"
-import {isNullOrUndefined} from "util"
+import { isNullOrUndefined } from "util"
+import { Entity, Processor } from "../analyse/model/flow.model"
+import { ContextBarItem, UiId, Visibility, FlowEntityConf } from "./ui.models"
 
 /**
  * Created by cmathew on 01.07.17.
@@ -13,19 +21,16 @@ import {isNullOrUndefined} from "util"
 
 @Injectable()
 export class ObservableState {
-
   selectedEntity: Observable<Entity>
 
-  constructor(private store:Store<AppState>,
-              private ngZone: NgZone) {
+  constructor(private store: Store<AppState>, private ngZone: NgZone) {
     this.selectedEntity = this.store.select("selectedEntity")
   }
 
   appState(): AppState {
-
     let state: AppState
 
-    this.store.take(1).subscribe((s: AppState) => state = s)
+    this.store.take(1).subscribe((s: AppState) => (state = s))
 
     // You can always rely on subscribe()
     // running synchronously if you have
@@ -38,55 +43,56 @@ export class ObservableState {
   }
 
   dispatch(action: Action) {
-    return  this.ngZone.run(() => this.store.dispatch(action))
+    return this.ngZone.run(() => this.store.dispatch(action))
   }
 
   selectedProcessor(): Processor {
-    return this.activeFlowTab().flowInstance.processors
-      .find(p => p.id === this.appState().selectedEntity.id)
+    return this.activeFlowTab().flowInstance.processors.find(
+      (p: Processor) => p.id === this.appState().selectedEntity.id
+    )
   }
 
   processorToConnect(): Processor {
-    return this.activeFlowTab().flowInstance.processors
-      .find(p => p.id === this.appState().processorToConnectId)
+    return this.activeFlowTab().flowInstance.processors.find(
+      (p: Processor) => p.id === this.appState().processorToConnectId
+    )
   }
 
   selectedProcessor$(): Observable<Processor> {
-    return this.activeFlowTab$()
-      .map(ft => {
-          if (ft === undefined)
-            return undefined
-          else
-            return ft.flowInstance.processors
-              .find(p => p.id === this.appState().selectedEntity.id)
-        }
-      )
+    return this.activeFlowTab$().map(ft => {
+      if (ft === undefined) return undefined
+      else
+        return ft.flowInstance.processors.find(
+          (p: Processor) => p.id === this.appState().selectedEntity.id
+        )
+    })
   }
 
   selectedProcessorId$(): Observable<string> {
-    return this.selectedProcessor$()
-      .map(sp => {
-          if (sp === undefined)
-            return undefined
-          else
-            return sp.id
-        }
-      )
+    return this.selectedProcessor$().map(sp => {
+      if (sp === undefined) return undefined
+      else return sp.id
+    })
   }
 
   connectionsForSourceProcessor(processorId: string): Connection[] {
-    return this.activeFlowTab()
-      .flowInstance.connections.filter(
-        c => c.config.source.componentType === FlowComponent.ProcessorType && c.config.source.id === processorId)
+    return this.activeFlowTab().flowInstance.connections.filter(
+      (c: Connection) =>
+        c.config.source.componentType === FlowComponent.ProcessorType &&
+        c.config.source.id === processorId
+    )
   }
 
   selectedConnection(): Connection {
-    return this.activeFlowTab().flowInstance.connections
-      .find(p => p.id === this.appState().selectedEntity.id)
+    return this.activeFlowTab().flowInstance.connections.find(
+      (c: Connection) => c.id === this.appState().selectedEntity.id
+    )
   }
 
   processor(processorId: string): Processor {
-    return this.activeFlowTab().flowInstance.processors.find(p => p.id === processorId)
+    return this.activeFlowTab().flowInstance.processors.find(
+      (p: Processor) => p.id === processorId
+    )
   }
 
   activeFlowTab(): FlowTab {
@@ -100,15 +106,14 @@ export class ObservableState {
   }
 
   hideContextBarItem(cbItem: ContextBarItem): Observable<boolean> {
-    return this.selectedEntity
-      .map((se: Entity) => {
-        switch(cbItem.view) {
-          case UiId.ANALYSE:
-            return cbItem.entityType !== se.type
-          default:
-            return false
-        }
-      })
+    return this.selectedEntity.map((se: Entity) => {
+      switch (cbItem.view) {
+        case UiId.ANALYSE:
+          return cbItem.entityType !== se.type
+        default:
+          return false
+      }
+    })
   }
 
   connectMode(): boolean {
@@ -136,11 +141,10 @@ export interface AppState {
 
 export const initialAppState: AppState = {
   flowTabs: [],
-  selectedEntity: {id: "", type: EntityType.UNKNOWN},
+  selectedEntity: { id: "", type: EntityType.UNKNOWN },
   processorToConnectId: "",
   currentProcessorProperties: undefined,
   selectedFlowEntityConf: undefined,
   connectMode: false,
   visibility: new Visibility()
 }
-
