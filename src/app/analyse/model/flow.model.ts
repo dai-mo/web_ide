@@ -1,8 +1,8 @@
+import { ValidationErrorResponse } from "../../service/error.service"
+
 /**
  * Created by cmathew on 14/07/16.
  */
-
-import {ValidationErrorResponse} from "../shared/util/error.service"
 
 export enum EntityType {
   UNKNOWN,
@@ -37,9 +37,11 @@ export class FlowComponent {
   static FunnelType = "FUNNEL"
 
   static isProcessor(componentType: string): boolean {
-    return componentType === FlowComponent.ProcessorType ||
+    return (
+      componentType === FlowComponent.ProcessorType ||
       componentType === FlowComponent.ExternalProcessorType ||
       componentType === FlowComponent.InputPortIngestionType
+    )
   }
 }
 
@@ -47,8 +49,8 @@ export class FlowTemplate {
   id: string
   name: string
   description: string
-  uri:string
-  date:string
+  uri: string
+  date: string
 }
 
 export class SchemaProperties {
@@ -65,7 +67,6 @@ export enum PropertyLevel {
 }
 
 export class ProcessorProperties {
-
   static isExternalProcessorProperty(level: PropertyLevel): boolean {
     return level === PropertyLevel.ExternalProcessorProperty
   }
@@ -75,9 +76,11 @@ export class ProcessorProperties {
   }
 
   static isHiddenProperty(level: PropertyLevel): boolean {
-    return level === PropertyLevel.ClosedProperty ||
+    return (
+      level === PropertyLevel.ClosedProperty ||
       level === PropertyLevel.ProcessorCoreProperty ||
       level === PropertyLevel.ExternalProcessorProperty
+    )
   }
 
   static isSchemaProperty(level: PropertyLevel): boolean {
@@ -89,7 +92,6 @@ export class ExternalProcessorProperties {
   static ReceiverKey = "_EXTERNAL_RECEIVER"
   static SenderKey = "_EXTERNAL_SENDER"
 
-
   static RootInputConnectionIdKey = "_ROOT_INPUT_CONNECTION_ID"
   static RootOutputConnectionIdKey = "_ROOT_OUTPUT_CONNECTION_ID"
 
@@ -98,14 +100,12 @@ export class ExternalProcessorProperties {
 }
 
 export class CoreProperties {
-  static _PROCESSOR_CLASS: string = "_PROCESSOR_CLASS"
-  static _PROCESSOR_TYPE: string = "_PROCESSOR_TYPE"
-  static _READ_SCHEMA_ID: string = "_READ_SCHEMA_ID"
-  static _READ_SCHEMA: string = "_READ_SCHEMA"
-  static _WRITE_SCHEMA_ID: string = "_WRITE_SCHEMA_ID"
-  static _WRITE_SCHEMA: string = "_WRITE_SCHEMA"
-
-
+  static _PROCESSOR_CLASS = "_PROCESSOR_CLASS"
+  static _PROCESSOR_TYPE = "_PROCESSOR_TYPE"
+  static _READ_SCHEMA_ID = "_READ_SCHEMA_ID"
+  static _READ_SCHEMA = "_READ_SCHEMA"
+  static _WRITE_SCHEMA_ID = "_WRITE_SCHEMA_ID"
+  static _WRITE_SCHEMA = "_WRITE_SCHEMA"
 }
 
 export class PossibleValue {
@@ -113,7 +113,6 @@ export class PossibleValue {
   displayName: string
   description: string
 }
-
 
 export class PropertyDefinition {
   displayName: string
@@ -142,8 +141,6 @@ export class ConnectionConfig {
   selectedRelationships: string[]
   availableRelationships: string[]
 }
-
-
 
 export class Connection {
   id: string
@@ -182,7 +179,7 @@ export class Configuration {
   inputMimeType: string
   outputMimeType: string
   processorClassName: string
-  stateful: boolean = false
+  stateful = false
   triggerType: string = TriggerType.DEFAULT
   inputRequirementType: string = InputRequirementType.INPUT_ALLOWED
 }
@@ -192,8 +189,6 @@ export class ProcessorDetails {
   configuration: Configuration
   relationships: RemoteRelationship[]
 }
-
-
 
 export class Processor {
   id: string
@@ -205,7 +200,6 @@ export class Processor {
   propertyDefinitions: PropertyDefinition[]
   relationships: RemoteRelationship[]
   validationErrors: ValidationErrorResponse
-
 }
 
 export class ProcessorServiceDefinition {
@@ -215,6 +209,10 @@ export class ProcessorServiceDefinition {
 }
 
 export class FlowInstance {
+  static stateRunning = "RUNNING"
+  static stateStopped = "STOPPED"
+  static stateNotStarted = "NOT_STARTED"
+
   id: string
   name: string
   nameId: string
@@ -223,24 +221,28 @@ export class FlowInstance {
   processors: Processor[]
   connections: Connection[]
 
-  static stateRunning = "RUNNING"
-  static stateStopped = "STOPPED"
-  static stateNotStarted = "NOT_STARTED"
-
-  validationErrors(): ValidationErrorResponse[] {
-    return this.processors.map(p => p.validationErrors)
-  }
-
   static hasExternal(flowInstance: FlowInstance): boolean {
-    if(flowInstance.connections.find(c => {
-        return c.config.source.componentType === FlowComponent.ExternalProcessorType ||
-        c.config.destination.componentType === FlowComponent.ExternalProcessorType ||
-          c.config.source.componentType === FlowComponent.InputPortIngestionType ||
-          c.config.destination.componentType === FlowComponent.InputPortIngestionType
-    }) !== undefined)
+    if (
+      flowInstance.connections.find(c => {
+        return (
+          c.config.source.componentType ===
+            FlowComponent.ExternalProcessorType ||
+          c.config.destination.componentType ===
+            FlowComponent.ExternalProcessorType ||
+          c.config.source.componentType ===
+            FlowComponent.InputPortIngestionType ||
+          c.config.destination.componentType ===
+            FlowComponent.InputPortIngestionType
+        )
+      }) !== undefined
+    )
       return true
 
     return false
+  }
+
+  validationErrors(): ValidationErrorResponse[] {
+    return this.processors.map(p => p.validationErrors)
   }
 }
 
@@ -252,25 +254,27 @@ export class FlowNode {
   ptype: string
   title: string
   image: string
-  shape: string = "image"
+  shape = "image"
   color: {
-    background: string,
+    background: string
     highlight: { background: string }
   } = {
     background: "white",
-    highlight: {background: "white"}
+    highlight: { background: "white" }
   }
   validationErrors: ValidationErrorResponse
 
+  private baseUrl: string = window.location.protocol +
+  "//" +
+  window.location.host
 
-  private baseUrl: string = window.location.protocol + "//" +
-    window.location.host
-
-  constructor(uuid: string,
-              type: string,
-              ptype: string,
-              validationErrors: ValidationErrorResponse,
-              label: string = "") {
+  constructor(
+    uuid: string,
+    type: string,
+    ptype: string,
+    validationErrors: ValidationErrorResponse,
+    label: string = ""
+  ) {
     this.uuid = uuid
     this.id = uuid
     this.label = label
@@ -282,7 +286,10 @@ export class FlowNode {
   }
 
   validate(validationErrors: ValidationErrorResponse) {
-    if (validationErrors !== undefined && validationErrors.validationInfo.length > 0) {
+    if (
+      validationErrors !== undefined &&
+      validationErrors.validationInfo.length > 0
+    ) {
       this.color.background = "#8e2f33"
       this.color.highlight.background = "#8e2f33"
       this.validationErrors = validationErrors
@@ -290,8 +297,6 @@ export class FlowNode {
   }
 
   pTypeImage(ptype: string): string {
-
-
     switch (ptype) {
       case RemoteProcessor.IngestionProcessorType:
         return this.baseUrl + "/assets/images/ingestion_processor.svg"
@@ -314,10 +319,12 @@ export class FlowEdge {
   arrows: string
   connection: Connection
 
-  constructor(from: string,
-              to: string,
-              connection: Connection,
-              arrows: string = "to") {
+  constructor(
+    from: string,
+    to: string,
+    connection: Connection,
+    arrows: string = "to"
+  ) {
     this.id = this.genId(connection)
     this.from = from
     this.to = to
@@ -326,10 +333,11 @@ export class FlowEdge {
   }
 
   genId(connection: Connection): string {
-    if(connection.id === "")
-      return connection.config.source.id + "-" + connection.config.destination.id
-    else
-      return connection.id
+    if (connection.id === "")
+      return (
+        connection.config.source.id + "-" + connection.config.destination.id
+      )
+    else return connection.id
   }
 }
 
@@ -337,33 +345,32 @@ export class FlowGraph {
   nodes: FlowNode[]
   edges: FlowEdge[]
 
-  constructor(nodes: FlowNode[] = [],
-              edges: FlowEdge[] = []) {
+  constructor(nodes: FlowNode[] = [], edges: FlowEdge[] = []) {
     this.nodes = nodes
     this.edges = edges
   }
 }
 
-
 export class FlowTab {
   title: string
   id?: string = undefined
-  name?: string = ""
+  name = ""
   flowInstance?: FlowInstance = undefined
-  labelToggle?: boolean = false
-  active?: boolean = false
-  disabled?: boolean = false
-  removable?: boolean = false
+  labelToggle = false
+  active = false
+  disabled = false
+  removable = false
 
-
-  constructor(title: string,
-              id: string = undefined,
-              name: string = "",
-              flowInstance: FlowInstance = undefined,
-              labelToggle: boolean = false,
-              active: boolean = false,
-              disabled: boolean = false,
-              removable: boolean = false) {
+  constructor(
+    title: string,
+    id: string,
+    name: string = "",
+    flowInstance: FlowInstance,
+    labelToggle: boolean = false,
+    active: boolean = false,
+    disabled: boolean = false,
+    removable: boolean = false
+  ) {
     this.title = title
     this.id = id
     this.name = name
@@ -372,17 +379,14 @@ export class FlowTab {
     this.active = active
     this.disabled = disabled
     this.removable = removable
-
   }
 }
-
 
 export class VisTab {
   visType: string
   active: boolean
 
-  constructor(visType: string,
-              active: boolean = false) {
+  constructor(visType: string, active: boolean = false) {
     this.visType = visType
     this.active = active
   }
@@ -391,8 +395,6 @@ export class VisTab {
 export class Provenance {
   id: string
   content: string
-
-
 }
 
 export class Action {
@@ -405,7 +407,6 @@ export class DCSError {
   httpStatusCode: number
   errorMessage: string
 }
-
 
 export class FlowInstantiation {
   id: string

@@ -14,6 +14,7 @@ import * as SI from "seamless-immutable"
 import { isNullOrUndefined } from "util"
 import { Entity, Processor } from "../analyse/model/flow.model"
 import { ContextBarItem, UiId, Visibility, FlowEntityConf } from "./ui.models"
+import { AppAction } from "./reducers"
 
 /**
  * Created by cmathew on 01.07.17.
@@ -42,7 +43,7 @@ export class ObservableState {
     return this.store
   }
 
-  dispatch(action: Action) {
+  dispatch(action: AppAction) {
     return this.ngZone.run(() => this.store.dispatch(action))
   }
 
