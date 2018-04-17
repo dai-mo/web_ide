@@ -1,6 +1,6 @@
-import { Component } from "@angular/core";
-import { UIStateStore } from "./ui.state.store";
-import { ObservableState } from "../store/state";
+import { Component } from "@angular/core"
+import { UIStateStore } from "../../state/ui.state.store"
+import { ObservableState } from "../../state/state"
 import {
   FlowComponent,
   Connectable,
@@ -12,31 +12,31 @@ import {
   Processor,
   RemoteRelationship,
   RemoteProcessor
-} from "../analyse/flow.model";
-import { FlowUtils } from "./util/ui.utils";
-import { ConnectionService } from "../service/connection.service";
-import { ErrorService } from "./util/error.service";
-import { SELECT_ENTITY, UPDATE_FLOW_INSTANCE } from "../store/reducers";
-import { FlowService } from "../service/flow.service";
+} from "../../analyse/model/flow.model"
+import { FlowUtils } from "../../util/ui.utils"
+import { ConnectionService } from "../../analyse/service/connection.service"
+import { ErrorService } from "../../service/error.service"
+import { SELECT_ENTITY, UPDATE_FLOW_INSTANCE } from "../../state/reducers"
+import { FlowService } from "../../analyse/service/flow.service"
 
 /**
  * Created by cmathew on 20.07.17.
  */
 @Component({
-  selector: "relationships",
+  selector: "abk-relationships",
   templateUrl: "./relationships.component.html",
   styleUrls: ["./relationships.component.scss"]
 })
 export class RelationshipsComponent {
-  flowInstanceId: string;
-  sourceProcessor: Processor;
-  destinationProcessor: Processor;
-  sourceConnections: Connection[];
-  rels: RemoteRelationship[];
+  flowInstanceId: string
+  sourceProcessor: Processor
+  destinationProcessor: Processor
+  sourceConnections: Connection[]
+  rels: RemoteRelationship[]
 
-  selectedRel: string;
+  selectedRel: string
 
-  connections: any = {};
+  connections: any = {}
 
   constructor(
     private connectionService: ConnectionService,
@@ -45,22 +45,22 @@ export class RelationshipsComponent {
     private uiStateStore: UIStateStore,
     private oss: ObservableState
   ) {
-    this.flowInstanceId = this.oss.activeFlowTab().flowInstance.id;
-    this.sourceProcessor = this.oss.selectedProcessor();
-    this.destinationProcessor = this.oss.processorToConnect();
+    this.flowInstanceId = this.oss.activeFlowTab().flowInstance.id
+    this.sourceProcessor = this.oss.selectedProcessor()
+    this.destinationProcessor = this.oss.processorToConnect()
     this.sourceConnections = this.oss.connectionsForSourceProcessor(
       this.oss.selectedProcessor().id
-    );
-    this.rels = this.sourceProcessor.relationships;
-    this.rels.forEach(r => (this.connections[r.id] = this.label(r)));
+    )
+    this.rels = this.sourceProcessor.relationships
+    this.rels.forEach(r => (this.connections[r.id] = this.label(r)))
   }
 
   private getComponentType(processorType: string): string {
     switch (processorType) {
       case RemoteProcessor.ExternalProcessorType:
-        return FlowComponent.ExternalProcessorType;
+        return FlowComponent.ExternalProcessorType
       default:
-        return FlowComponent.ProcessorType;
+        return FlowComponent.ProcessorType
     }
   }
 
@@ -71,10 +71,10 @@ export class RelationshipsComponent {
         id: this.oss.activeFlowTab().flowInstance.id,
         type: EntityType.FLOW_INSTANCE
       }
-    });
+    })
 
     if (this.selectedRel !== undefined) {
-      let source: Connectable = {
+      const source: Connectable = {
         id: this.sourceProcessor.id,
         componentType: this.getComponentType(
           this.sourceProcessor.processorType
@@ -83,9 +83,9 @@ export class RelationshipsComponent {
         properties: {
           [CoreProperties._PROCESSOR_TYPE]: this.sourceProcessor.processorType
         }
-      };
+      }
 
-      let destination: Connectable = {
+      const destination: Connectable = {
         id: this.destinationProcessor.id,
         componentType: this.getComponentType(
           this.destinationProcessor.processorType
@@ -95,15 +95,15 @@ export class RelationshipsComponent {
           [CoreProperties._PROCESSOR_TYPE]: this.destinationProcessor
             .processorType
         }
-      };
+      }
 
-      let connectionConfig: ConnectionConfig = {
+      const connectionConfig: ConnectionConfig = {
         flowInstanceId: this.flowInstanceId,
         source: source,
         destination: destination,
         selectedRelationships: [this.selectedRel],
         availableRelationships: []
-      };
+      }
 
       this.connectionService.create(connectionConfig).subscribe(
         (connection: Connection) => {
@@ -116,44 +116,44 @@ export class RelationshipsComponent {
                   payload: {
                     flowInstance: flowInstance
                   }
-                });
+                })
               },
               (error: any) => {
-                this.errorService.handleError(error);
+                this.errorService.handleError(error)
               }
-            );
-          this.uiStateStore.isRelationshipsSettingsDialogVisible = false;
+            )
+          this.uiStateStore.isRelationshipsSettingsDialogVisible = false
         },
         (error: any) => {
-          this.errorService.handleError(error);
+          this.errorService.handleError(error)
         }
-      );
+      )
     }
   }
 
   cancel() {
-    this.uiStateStore.isRelationshipsSettingsDialogVisible = false;
+    this.uiStateStore.isRelationshipsSettingsDialogVisible = false
     this.oss.dispatch({
       type: SELECT_ENTITY,
       payload: {
         id: this.oss.activeFlowTab().flowInstance.id,
         type: EntityType.FLOW_INSTANCE
       }
-    });
+    })
   }
 
   ok() {
-    this.uiStateStore.isRelationshipsInfoDialogVisible = false;
+    this.uiStateStore.isRelationshipsInfoDialogVisible = false
   }
 
   select(event: any) {
     this.connections[this.selectedRel] = this.destination(
       this.rels.find(r => r.id === this.selectedRel)
-    );
+    )
   }
 
   destination(rel: RemoteRelationship): string {
-    if (rel.autoTerminate) return "auto-terminate";
+    if (rel.autoTerminate) return "auto-terminate"
     else
       return this.oss
         .connectionsForSourceProcessor(this.oss.selectedProcessor().id)
@@ -162,10 +162,10 @@ export class RelationshipsComponent {
             this.oss.processor(c.config.destination.id)
           )
         )
-        .join();
+        .join()
   }
 
   label(rel: RemoteRelationship): string {
-    return rel.id + " -> " + this.destination(rel);
+    return rel.id + " -> " + this.destination(rel)
   }
 }

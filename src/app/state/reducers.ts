@@ -1,5 +1,5 @@
 import { Visibility, FlowEntityConf } from "./ui.models"
-import { FlowInstance } from "./../analyse/model/flow.model"
+
 /**
  * Created by cmathew on 03.07.17.
  */

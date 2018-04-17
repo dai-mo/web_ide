@@ -1,37 +1,37 @@
 /**
  * Created by cmathew on 13/07/16.
  */
-import { Component, Input, OnInit } from "@angular/core";
-import { MenuItem, OverlayPanel } from "primeng/primeng";
-import { ContextStore } from "../context.store";
-import { UIStateStore } from "../ui.state.store";
-import { UiId } from "../ui.models";
-import { AppState, ObservableState } from "../../store/state";
-import { Observable } from "rxjs";
-import { FlowTab } from "../../analyse/flow.model";
+import { Component, Input, OnInit } from "@angular/core"
+import { MenuItem, OverlayPanel } from "primeng/primeng"
+import { Observable } from "rxjs/Observable"
+import { UiId } from "./../../state/ui.models"
+import { FlowTab } from "../../analyse/model/flow.model"
+import { AppState, ObservableState } from "../../state/state"
+import { ContextStore } from "../../state/context.store"
+import { UIStateStore } from "../../state/ui.state.store"
 
 @Component({
-  selector: "ws-view",
+  selector: "abk-ws-view",
   templateUrl: "./ws-view.component.html",
   styleUrls: ["./ws-view.component.scss"]
 })
 export class WsViewComponent {
-  @Input() name: String;
+  @Input() name: String
 
-  uiId = UiId;
+  uiId = UiId
 
   flowTabs: Observable<FlowTab[]> = this.oss
     .appStore()
-    .select((state: AppState) => state.flowTabs);
+    .select((state: AppState) => state.flowTabs)
 
   constructor(
-    private contextStore: ContextStore,
-    private uiStateStore: UIStateStore,
-    private oss: ObservableState
+    public contextStore: ContextStore,
+    public uiStateStore: UIStateStore,
+    public oss: ObservableState
   ) {}
 
   maximiseView(event: any, viewName: string) {
-    this.uiStateStore.maximiseView(viewName);
-    this.uiStateStore.setResizeView(event);
+    this.uiStateStore.maximiseView(viewName)
+    this.uiStateStore.setResizeView(event)
   }
 }

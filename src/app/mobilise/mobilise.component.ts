@@ -1,13 +1,12 @@
 /**
  * Created by cmathew on 14/07/16.
  */
-import { Component } from "@angular/core";
-import { ContentComponent } from "./content.component";
-import { UIStateStore } from "../shared/ui.state.store";
-import { ObservableState } from "../store/state";
+import { Component } from "@angular/core"
+import { UIStateStore } from "../state/ui.state.store"
+import { ObservableState } from "../state/state"
 
 @Component({
-  selector: "mobilise",
+  selector: "abk-mobilise",
   templateUrl: "./mobilise.component.html",
   styleUrls: ["./mobilise.component.scss"]
 })
