@@ -2,37 +2,31 @@
  * Created by cmathew on 22.11.16.
  */
 
-import {Component, Input} from "@angular/core"
-import {UIStateStore} from "../shared/ui.state.store"
-import {UiId} from "../shared/ui.models"
-import {VisTab} from "../analyse/flow.model"
-
+import { Component, Input } from "@angular/core"
+import { UiId } from "../../state/ui.models"
+import { UIStateStore } from "../../state/ui.state.store"
+import { VisTab } from "../../analyse/model/flow.model"
 
 @Component({
-  selector: "vis-tabs",
+  selector: "abk-vis-tabs",
   templateUrl: "./vis-tabs.component.html",
   styleUrls: ["./vis-tabs.component.scss"]
 })
 export class VisTabsComponent {
-
   uiId = UiId
 
   @Input() selectedVisType: string
 
-  constructor(private uiStateStore: UIStateStore) {
-
-  }
+  constructor(private uiStateStore: UIStateStore) {}
 
   public selectActiveTab(index: number): void {
-    let at = this.uiStateStore.getVisTabs()[index]
-    if(at) this.uiStateStore.setActiveVisTab(at)
+    const at = this.uiStateStore.getVisTabs()[index]
+    if (at) this.uiStateStore.setActiveVisTab(at)
   }
 
   public getMapVisTab(): VisTab {
-    return this.uiStateStore.getVisTabs().find(vt => vt.visType === UiId.VIS_MAP)
+    return this.uiStateStore
+      .getVisTabs()
+      .find(vt => vt.visType === UiId.VIS_MAP)
   }
-
 }
-
-
-

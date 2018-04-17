@@ -1,16 +1,15 @@
 /**
  * Created by cmathew on 14/07/16.
  */
-import { Component, OnInit } from "@angular/core";
-import { ErrorService } from "../shared/util/error.service";
-import { UIStateStore } from "../shared/ui.state.store";
-import { FlowService } from "../service/flow.service";
-import { VisTab } from "../analyse/flow.model";
-import { ContextMenuItem, UiId } from "../shared/ui.models";
-import { ContextStore } from "../shared/context.store";
+import { Component, OnInit } from "@angular/core"
+import { UIStateStore } from "../state/ui.state.store"
+import { ContextStore } from "../state/context.store"
+import { ErrorService } from "../service/error.service"
+import { ContextMenuItem, UiId } from "../state/ui.models"
+import { VisTab } from "../analyse/model/flow.model"
 
 @Component({
-  selector: "visualise",
+  selector: "abk-visualise",
   templateUrl: "./visualise.component.html",
   styleUrls: ["./visualise.component.scss"]
 })
@@ -22,43 +21,43 @@ export class VisualiseComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    let cmItems: ContextMenuItem[] = [
+    const cmItems: ContextMenuItem[] = [
       {
         label: "Map",
         command: event => {
           if (this.checkSelectedVisType(UiId.VIS_MAP))
-            this.selectVisType(UiId.VIS_MAP);
+            this.selectVisType(UiId.VIS_MAP)
         }
       },
       {
         label: "Chart",
         command: event => {
           if (this.checkSelectedVisType(UiId.VIS_CHART))
-            this.selectVisType(UiId.VIS_CHART);
+            this.selectVisType(UiId.VIS_CHART)
         }
       }
-    ];
-    this.contextStore.addContextMenu(UiId.VISUALISE, cmItems);
+    ]
+    this.contextStore.addContextMenu(UiId.VISUALISE, cmItems)
   }
 
   private checkSelectedVisType(visType: string): boolean {
     if (this.uiStateStore.getSelectedProcessorId() == null) {
-      console.log("No processor selected");
-      return false;
+      console.log("No processor selected")
+      return false
     }
 
     if (this.uiStateStore.getVisTabs().find(vt => vt.visType === visType)) {
-      console.log("The type " + visType + "is already selected");
-      return false;
+      console.log("The type " + visType + "is already selected")
+      return false
     }
-    return true;
+    return true
   }
 
   public selectVisType(visType: string): void {
     if (visType) {
-      let visTab: VisTab = new VisTab(visType);
-      this.uiStateStore.addVisTab(visTab);
-      this.uiStateStore.setActiveVisTab(visTab);
+      const visTab: VisTab = new VisTab(visType)
+      this.uiStateStore.addVisTab(visTab)
+      this.uiStateStore.setActiveVisTab(visTab)
     }
   }
 }
