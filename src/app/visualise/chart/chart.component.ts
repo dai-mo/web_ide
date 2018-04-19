@@ -3,23 +3,27 @@
  */
 
 import {
-  Component, OnInit, Input, OnDestroy, AfterViewInit, AfterViewChecked, ViewChild,
+  Component,
+  OnInit,
+  Input,
+  OnDestroy,
+  AfterViewInit,
+  AfterViewChecked,
+  ViewChild,
   ElementRef
 } from "@angular/core"
-import {Provenance} from "../../analyse/flow.model"
-import {UIStateStore} from "../../shared/ui.state.store"
+import { UIStateStore } from "../../state/ui.state.store"
+import { Provenance } from "../../analyse/model/flow.model"
 
 declare var Plotly: any
 
 @Component({
-  selector: "chart",
+  selector: "abk-chart",
   templateUrl: "./chart.component.html",
   styleUrls: ["./chart.component.scss"]
 })
-
-export class ChartComponent implements AfterViewInit,  OnDestroy{
+export class ChartComponent implements AfterViewInit, OnDestroy {
   @ViewChild("chart") chartElementRef: ElementRef
-
 
   private data: any
   private xData: Array<any> = []
@@ -27,7 +31,7 @@ export class ChartComponent implements AfterViewInit,  OnDestroy{
   private layout: any
   private options: any
 
-  private isChartInitialised: boolean = false
+  private isChartInitialised = false
 
   constructor(private uiStateStore: UIStateStore) {
     this.options = {
@@ -37,14 +41,18 @@ export class ChartComponent implements AfterViewInit,  OnDestroy{
 
   @Input()
   set reload(provenances: Provenance[]) {
-    if(provenances != null && this.isChartInitialised) {
+    if (provenances != null && this.isChartInitialised) {
       this.reloadData()
-      this.data = [{x : this.xData, y : this.yData, type : "bar"}]
-      Plotly.newPlot(this.chartElementRef.nativeElement, this.data, this.layout, this.options)
+      this.data = [{ x: this.xData, y: this.yData, type: "bar" }]
+      Plotly.newPlot(
+        this.chartElementRef.nativeElement,
+        this.data,
+        this.layout,
+        this.options
+      )
       Plotly.redraw(this.chartElementRef.nativeElement)
     }
   }
-
 
   ngOnDestroy() {
     Plotly.purge(this.chartElementRef.nativeElement)
@@ -52,28 +60,29 @@ export class ChartComponent implements AfterViewInit,  OnDestroy{
 
   ngAfterViewInit() {
     this.reloadData()
-    this.data = [{x : this.xData, y : this.yData, type : "bar"}]
-    Plotly.newPlot(this.chartElementRef.nativeElement, this.data, this.layout, this.options)
+    this.data = [{ x: this.xData, y: this.yData, type: "bar" }]
+    Plotly.newPlot(
+      this.chartElementRef.nativeElement,
+      this.data,
+      this.layout,
+      this.options
+    )
     this.isChartInitialised = true
   }
 
   reloadData() {
-    if(this.uiStateStore.hasProvenances) {
-      let xyData: Map<string, number> = new Map()
+    if (this.uiStateStore.hasProvenances) {
+      const xyData: Map<string, number> = new Map()
       this.xData = []
       this.yData = []
 
-      this.uiStateStore
-        .getProvenances()
-        .forEach(prov => {
-          let content = JSON.parse(prov.content)
-          let x = content.institutionCode.string
-          let count = xyData.get(x)
-          if(count !== undefined)
-            xyData.set(x, count + 1)
-          else
-            xyData.set(x, 1)
-        })
+      this.uiStateStore.getProvenances().forEach(prov => {
+        const content = JSON.parse(prov.content)
+        const x = content.institutionCode.string
+        const count = xyData.get(x)
+        if (count !== undefined) xyData.set(x, count + 1)
+        else xyData.set(x, 1)
+      })
       xyData.forEach(this.mapToData.bind(this))
     }
   }

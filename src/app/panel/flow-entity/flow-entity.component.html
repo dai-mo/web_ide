@@ -8,11 +8,11 @@
     <div class="entity-tab-view" *ngIf="selectedFlowEntityConf | async as flowEntity">
       <p-tabView *ngIf="flowEntity.isSelected()">
         <p-tabPanel *ngFor="let fieldGroup of flowEntity.selectedEntityFieldGroups()" [header]="fieldGroup.label" [selected]="fieldGroup.active">
-          <flow-entity-info [entityFieldGroup]="fieldGroup"></flow-entity-info>
+          <abk-flow-entity-info [entityFieldGroup]="fieldGroup"></abk-flow-entity-info>
         </p-tabPanel>
         <p-tabPanel *ngFor="let field of flowEntity.selectedEntitySpecificFields()" [header]="field.label" [selected]="field.active">
-          <schema-property *ngIf="field.isSchemaField()" [schemaField]="field">
-          </schema-property>
+          <abk-schema-property *ngIf="field.isSchemaField()" [schemaField]="field">
+          </abk-schema-property>
         </p-tabPanel>
       </p-tabView>
     </div>

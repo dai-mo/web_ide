@@ -4,10 +4,13 @@
 
 import { Injectable, NgZone } from "@angular/core"
 
-import { FlowGraph } from "../model/flow.model"
+import { FlowGraph, EntityType } from "../model/flow.model"
 import { UIStateStore } from "../../state/ui.state.store"
 import { ObservableState } from "../../state/state"
-import { SELECT_ENTITY } from "../../state/reducers";
+import {
+  SELECT_ENTITY,
+  SELECT_PROCESSOR_TO_CONNECT
+} from "../../state/reducers"
 
 declare var vis: any
 
@@ -74,13 +77,13 @@ export class FlowGraphService {
             oss.dispatch({
               type: SELECT_ENTITY,
               payload: {
-                id: data.from,
+                id: visdata.from,
                 type: EntityType.PROCESSOR
               }
             })
             oss.dispatch({
               type: SELECT_PROCESSOR_TO_CONNECT,
-              payload: { id: data.to }
+              payload: { id: visdata.to }
             })
             uiss.isRelationshipsSettingsDialogVisible = true
             return
@@ -88,7 +91,7 @@ export class FlowGraphService {
         }
       }
     }
-    let network = this.ngZone.runOutsideAngular(
+    const network = this.ngZone.runOutsideAngular(
       () => new vis.Network(el, data, options)
     )
 
@@ -104,11 +107,11 @@ export class FlowGraphService {
     network.on(
       "click",
       function(params: any) {
-        let selectedNodes = params.nodes
-        let selectedEdges = params.edges
+        const selectedNodes = params.nodes
+        const selectedEdges = params.edges
 
         if (selectedNodes.length > 0) {
-          let pid = selectedNodes[0]
+          const pid = selectedNodes[0]
           oss.dispatch({
             type: SELECT_ENTITY,
             payload: {
@@ -117,7 +120,7 @@ export class FlowGraphService {
             }
           })
         } else if (selectedEdges.length > 0) {
-          let cid = selectedEdges[0]
+          const cid = selectedEdges[0]
           oss.dispatch({
             type: SELECT_ENTITY,
             payload: {

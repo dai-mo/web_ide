@@ -1,9 +1,8 @@
-import { Visibility, FlowEntityConf } from "./ui.models"
-import { FlowInstance } from "./../analyse/model/flow.model"
 /**
  * Created by cmathew on 03.07.17.
  */
 
+import { FlowEntityConf } from "./fields"
 import { Action, ActionReducer } from "@ngrx/store"
 import * as SI from "seamless-immutable"
 import {
@@ -14,6 +13,7 @@ import {
   EntityType
 } from "../analyse/model/flow.model"
 import { initialAppState } from "./state"
+import { Visibility } from "./ui.state.store"
 
 export const SELECT_ENTITY = "SELECT_ENTITY"
 export const SELECT_PROCESSOR_TO_CONNECT = "SELECT_PROCESSOR_TO_CONNECT"
@@ -108,7 +108,7 @@ export function flowTabs(
       const updatedActiveFlowTab: FlowTab = activeFlowTab.set(
         "flowInstance",
         updatedFlowInstance
-      )
+      ) as FlowTab
       return SI.from(state).map(ft => {
         if (ft.active) return updatedActiveFlowTab
         else return ft
@@ -187,7 +187,7 @@ export function currentProcessorProperties(state: any, action: AppAction) {
 export function visibility(
   state: Visibility = new Visibility(),
   action: AppAction
-) {
+): Visibility {
   const newState = SI.from(state)
   switch (action.type) {
     case UPDATE_PROCESSOR_PROPERTIES_DIALOG_VISIBILITY:

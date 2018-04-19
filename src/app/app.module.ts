@@ -1,7 +1,7 @@
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic"
 import { ModuleWithProviders, NgModule } from "@angular/core"
 import { HttpModule } from "@angular/http"
-import { App } from "./app.component"
+import { AppComponent } from "./app.component"
 
 import { BrowserModule } from "@angular/platform-browser"
 import { DataTableModule, SharedModule } from "primeng/primeng"
@@ -110,7 +110,7 @@ export const AppRoutes: ModuleWithProviders = RouterModule.forRoot(routes)
 
 @NgModule({
   declarations: [
-    App,
+    AppComponent,
     LayoutComponent,
     WsViewComponent,
     ResizeDirective,
@@ -221,13 +221,6 @@ export const AppRoutes: ModuleWithProviders = RouterModule.forRoot(routes)
     // Third Party import follow ...
     AngularSplitModule
   ],
-  bootstrap: [App]
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
-
-KeycloakService.init().subscribe(
-  () => {
-    platformBrowserDynamic().bootstrapModule(AppModule)
-  },
-  (error: any) => console.log(error)
-)

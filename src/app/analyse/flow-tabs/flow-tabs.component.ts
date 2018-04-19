@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core"
 import {
   CoreProperties,
   DCSError,
@@ -8,22 +8,20 @@ import {
   FlowTab,
   ProcessorDetails,
   ProcessorServiceDefinition
-} from "./flow.model";
-import { FlowService } from "../service/flow.service";
-import { ErrorService } from "../shared/util/error.service";
-import { KeycloakService } from "../shared/keycloak.service";
-import { UIStateStore } from "../shared/ui.state.store";
-import { ContextStore } from "../shared/context.store";
+} from "../model/flow.model"
+import { FlowService } from "../service/flow.service"
+import { ErrorService } from "../../service/error.service"
+import { KeycloakService } from "../../service/keycloak.service"
+import { UIStateStore } from "../../state/ui.state.store"
+import { ContextStore } from "../../state/context.store"
+import { ContextBarItem, ContextMenuItem, UiId } from "../../state/ui.models"
 import {
-  ContextBarItem,
-  ContextMenuItem,
   FlowEntityConf,
   ProcessorConf,
-  ProcessorInfo,
-  UiId
-} from "../shared/ui.models";
-import { NotificationService } from "../shared/util/notification.service";
-import { AppState, ObservableState } from "../store/state";
+  ProcessorInfo
+} from "../../state/fields"
+import { NotificationService } from "../../service/notification.service"
+import { AppState, ObservableState } from "../../state/state"
 import {
   ADD_FLOW_TABS,
   REMOVE_FLOW_TAB,
@@ -33,82 +31,82 @@ import {
   UPDATE_FLOW_INSTANCE,
   UPDATE_FLOW_INSTANCE_STATE,
   UPDATE_SELECTED_FLOW_ENTITY_CONF
-} from "../store/reducers";
-import { ProcessorService } from "../service/processor.service";
-import { Observable } from "rxjs";
-import { UIUtils } from "../shared/util/ui.utils";
-import { ConnectionService } from "../service/connection.service";
-import { ProcessorPropertiesConf } from "../shared/processor-properties.conf";
+} from "../../state/reducers"
+import { ProcessorService } from "../../service/processor.service"
+import { Observable } from "rxjs/Observable"
+import { UIUtils } from "../../util/ui.utils"
+import { ConnectionService } from "../service/connection.service"
+import { ProcessorPropertiesConf } from "../../panel/processor-properties.conf"
 
 @Component({
-  selector: "flow-tabs",
+  selector: "abk-flow-tabs",
   templateUrl: "./flow-tabs.component.html",
   styleUrls: ["./flow-tabs.component.scss"]
 })
 export class FlowTabsComponent implements OnInit {
-  public nifiUrl: string;
-  flowCMItems: ContextMenuItem[];
+  public nifiUrl: string
+  flowCMItems: ContextMenuItem[]
 
-  emptyTab: FlowTab;
+  emptyTab: FlowTab
 
-  private stopFlowBarItem: ContextBarItem;
-  private startFlowBarItem: ContextBarItem;
+  private stopFlowBarItem: ContextBarItem
+  private startFlowBarItem: ContextBarItem
 
   flowTabs: Observable<FlowTab[]> = this.oss
     .appStore()
-    .select((state: AppState) => state.flowTabs);
+    .select((state: AppState) => state.flowTabs)
   selectedFlowEntityConf: Observable<
     FlowEntityConf
   > = this.oss
     .appStore()
-    .select((state: AppState) => state.selectedFlowEntityConf);
+    .select((state: AppState) => state.selectedFlowEntityConf)
 
   constructor(
     private flowService: FlowService,
     private errorService: ErrorService,
     private notificationService: NotificationService,
-    private oss: ObservableState,
-    private uiStateStore: UIStateStore,
+    public oss: ObservableState,
+    public uiStateStore: UIStateStore,
     private processorService: ProcessorService,
     private connectionService: ConnectionService,
     private contextStore: ContextStore
   ) {
     this.nifiUrl =
-      window.location.protocol + "//" + window.location.host + "/nifi";
+      window.location.protocol + "//" + window.location.host + "/nifi"
 
     this.flowCMItems = [
       { label: "Start Flow" },
       { label: "Stop Flow" },
       { label: "Delete Flow" }
-    ];
+    ]
   }
 
   public isRunning(flowTab: FlowTab) {
-    return flowTab.flowInstance.state === FlowInstance.stateRunning;
+    return flowTab.flowInstance.state === FlowInstance.stateRunning
   }
 
   public isStopped(flowTab: FlowTab) {
-    return flowTab.flowInstance.state === FlowInstance.stateStopped;
+    return flowTab.flowInstance.state === FlowInstance.stateStopped
   }
 
   public isNotStarted(flowTab: FlowTab) {
-    return flowTab.flowInstance.state === FlowInstance.stateNotStarted;
+    return flowTab.flowInstance.state === FlowInstance.stateNotStarted
   }
 
   public activeTab(): FlowTab {
-    return this.oss.appState().flowTabs.find(ft => ft.active);
+    return this.oss.appState().flowTabs.find(ft => ft.active)
   }
 
   public selectActiveTab(index: number): void {
-    let at = this.oss.appState().flowTabs[index];
-    if (at) this.setActiveTab(at);
+    const at = this.oss.appState().flowTabs[index]
+    if (at) this.setActiveTab(at)
   }
 
   public setActiveTab(flowTab: FlowTab): void {
     this.oss.dispatch({
       type: SELECT_FLOW_TAB,
       payload: { flowTab: flowTab }
-    });
+    })
 
     this.oss.dispatch({
       type: SELECT_ENTITY,
@@ -116,34 +114,34 @@ export class FlowTabsComponent implements OnInit {
         id: this.oss.activeFlowTab().flowInstance.id,
         type: EntityType.FLOW_INSTANCE
       }
-    });
+    })
 
-    this.updateContextBarItems(flowTab);
+    this.updateContextBarItems(flowTab)
   }
 
   updateContextBarItems(flowTab: FlowTab) {
-    this.stopFlowBarItem.enabled = this.isRunning(flowTab);
-    this.startFlowBarItem.enabled = !this.isRunning(flowTab);
+    this.stopFlowBarItem.enabled = this.isRunning(flowTab)
+    this.startFlowBarItem.enabled = !this.isRunning(flowTab)
   }
 
   updateStopStartBarItems(isRunning: boolean) {
-    this.stopFlowBarItem.enabled = isRunning;
-    this.startFlowBarItem.enabled = !isRunning;
+    this.stopFlowBarItem.enabled = isRunning
+    this.startFlowBarItem.enabled = !isRunning
   }
 
   public toggleTabLabel(flowTab: FlowTab) {
-    flowTab.labelToggle = !flowTab.labelToggle;
+    flowTab.labelToggle = !flowTab.labelToggle
   }
 
   public tabLabel(flowTab: FlowTab): string {
-    if (flowTab.labelToggle) return flowTab.flowInstance.nameId;
-    else return flowTab.flowInstance.name;
+    if (flowTab.labelToggle) return flowTab.flowInstance.nameId
+    else return flowTab.flowInstance.name
   }
 
   private addFlowInstance(flowInstance: FlowInstance) {
     if (flowInstance) {
-      let tab = UIUtils.toFlowTab(flowInstance);
-      this.addFlowTabs([tab]);
+      const tab = UIUtils.toFlowTab(flowInstance)
+      this.addFlowTabs([tab])
     }
   }
 
@@ -152,7 +150,7 @@ export class FlowTabsComponent implements OnInit {
       this.oss.dispatch({
         type: ADD_FLOW_TABS,
         payload: { flowTabs: flowTabs }
-      });
+      })
     }
   }
 
@@ -162,7 +160,7 @@ export class FlowTabsComponent implements OnInit {
       if (flowCreation.id === "") {
         // do nothing
       } else {
-        this.instantiateTemplate(flowCreation);
+        this.instantiateTemplate(flowCreation)
       }
     }
   }
@@ -172,23 +170,23 @@ export class FlowTabsComponent implements OnInit {
       function(rpt: string) {
         this.flowService.instantiateTemplate(flowCreation.id, rpt).subscribe(
           (flowInstance: FlowInstance) => {
-            this.addFlowInstance(flowInstance);
+            this.addFlowInstance(flowInstance)
             this.oss.dispatch({
               type: SELECT_ENTITY,
               payload: {
                 id: flowInstance.id,
                 type: EntityType.FLOW_INSTANCE
               }
-            });
+            })
           },
           (error: any) => {
-            this.errorService.handleError(error);
-            let dcsError: DCSError = error.json();
-            this.dialog.show(dcsError.message, dcsError.errorMessage);
+            this.errorService.handleError(error)
+            const dcsError: DCSError = error.json()
+            this.dialog.show(dcsError.message, dcsError.errorMessage)
           }
-        );
+        )
       }.bind(this)
-    );
+    )
   }
 
   public deleteTab(flowTab: FlowTab) {
@@ -203,23 +201,23 @@ export class FlowTabsComponent implements OnInit {
           )
           .subscribe(
             (deleteOK: boolean) => {
-              if (!deleteOK) alert("Flow Instance could not be deleted");
+              if (!deleteOK) alert("Flow Instance could not be deleted")
               else {
-                let flowTabs = this.oss.appState().flowTabs;
-                let flowTabIndex = flowTabs.indexOf(flowTab);
+                const flowTabs = this.oss.appState().flowTabs
+                const flowTabIndex = flowTabs.indexOf(flowTab)
                 this.oss.dispatch({
                   type: REMOVE_FLOW_TAB,
                   payload: {
                     flowTabId: flowTab.id,
                     index: flowTabIndex
                   }
-                });
+                })
               }
             },
             (error: any) => this.errorService.handleError(error)
-          );
+          )
       }.bind(this)
-    );
+    )
   }
 
   public startFlow(flowTab: FlowTab) {
@@ -233,12 +231,12 @@ export class FlowTabsComponent implements OnInit {
                 flowInstanceId: flowTab.flowInstance.id,
                 state: FlowInstance.stateRunning
               }
-            });
-            this.updateStopStartBarItems(true);
-          } else alert("Flow Instance failed to start");
+            })
+            this.updateStopStartBarItems(true)
+          } else alert("Flow Instance failed to start")
         },
         (error: any) => this.errorService.handleError(error)
-      );
+      )
     }
   }
 
@@ -251,11 +249,11 @@ export class FlowTabsComponent implements OnInit {
             payload: {
               flowInstance: flowInstance
             }
-          });
-          this.updateContextBarItems(flowTab);
+          })
+          this.updateContextBarItems(flowTab)
         },
         (error: any) => this.errorService.handleError(error)
-      );
+      )
     }
   }
 
@@ -270,18 +268,18 @@ export class FlowTabsComponent implements OnInit {
                 flowInstanceId: flowTab.flowInstance.id,
                 state: FlowInstance.stateStopped
               }
-            });
-            this.updateStopStartBarItems(false);
-          } else alert("Flow Instance failed to stop");
+            })
+            this.updateStopStartBarItems(false)
+          } else alert("Flow Instance failed to stop")
         },
         (error: any) => this.errorService.handleError(error)
-      );
+      )
     }
   }
 
   showProcessorPropertiesDialog() {
-    let sp = this.oss.selectedProcessor();
-    let ppc;
+    const sp = this.oss.selectedProcessor()
+    let ppc
 
     if (sp !== undefined) {
       ppc = new ProcessorPropertiesConf(
@@ -291,7 +289,7 @@ export class FlowTabsComponent implements OnInit {
         this.flowService,
         this.errorService,
         this.notificationService
-      );
+      )
     }
 
     // if(ppc !== undefined && !ppc.hasEntities()) {
@@ -313,53 +311,53 @@ export class FlowTabsComponent implements OnInit {
   showProcessorConfDialog() {
     this.processorService.list().subscribe(
       (defs: ProcessorServiceDefinition[]) => {
-        let processorConf = new ProcessorConf(
+        const processorConf = new ProcessorConf(
           defs,
           this.oss,
           this.flowService,
           this.processorService,
           this.errorService
-        );
+        )
         this.oss.dispatch({
           type: UPDATE_SELECTED_FLOW_ENTITY_CONF,
           payload: { flowEntityConf: processorConf }
-        });
-        this.uiStateStore.isProcessorConfDialogVisible = true;
+        })
+        this.uiStateStore.isProcessorConfDialogVisible = true
       },
       (error: any) => {
-        this.errorService.handleError(error);
+        this.errorService.handleError(error)
       }
-    );
+    )
   }
 
   showProcessorInfoDialog() {
-    let processorServiceClassName = this.oss.selectedProcessor().properties[
+    const processorServiceClassName = this.oss.selectedProcessor().properties[
       CoreProperties._PROCESSOR_CLASS
-    ];
+    ]
     this.processorService
       .details(processorServiceClassName)
       .subscribe((processorDetails: ProcessorDetails) => {
-        let processorInfo = new ProcessorInfo(
+        const processorInfo = new ProcessorInfo(
           processorServiceClassName,
           processorDetails,
           this.oss,
           this.processorService,
           this.errorService
-        );
+        )
         this.oss.dispatch({
           type: UPDATE_SELECTED_FLOW_ENTITY_CONF,
           payload: { flowEntityConf: processorInfo }
-        });
-        this.uiStateStore.isProcessorInfoDialogVisible = true;
-      });
+        })
+        this.uiStateStore.isProcessorInfoDialogVisible = true
+      })
   }
 
   showRelationshipsInfoDialog() {
-    this.uiStateStore.isRelationshipsInfoDialogVisible = true;
+    this.uiStateStore.isRelationshipsInfoDialogVisible = true
   }
 
   deleteSelectedProcessor() {
-    let sp = this.oss.selectedProcessor();
+    const sp = this.oss.selectedProcessor()
     this.processorService
       .destroy(
         sp.id,
@@ -376,7 +374,7 @@ export class FlowTabsComponent implements OnInit {
                 id: this.oss.activeFlowTab().flowInstance.id,
                 type: EntityType.FLOW_INSTANCE
               }
-            });
+            })
             this.flowService
               .instance(this.oss.activeFlowTab().flowInstance.id)
               .subscribe(
@@ -386,22 +384,22 @@ export class FlowTabsComponent implements OnInit {
                     payload: {
                       flowInstance: flowInstance
                     }
-                  });
+                  })
                 },
                 (error: any) => {
-                  this.errorService.handleError(error);
+                  this.errorService.handleError(error)
                 }
-              );
+              )
           }
         },
         (error: any) => {
-          this.errorService.handleError(error);
+          this.errorService.handleError(error)
         }
-      );
+      )
   }
 
   deleteSelectedConnection() {
-    let sc = this.oss.selectedConnection();
+    const sc = this.oss.selectedConnection()
     this.connectionService.remove(sc).subscribe(
       (deleteOk: boolean) => {
         if (deleteOk)
@@ -414,24 +412,24 @@ export class FlowTabsComponent implements OnInit {
                   payload: {
                     flowInstance: flowInstance
                   }
-                });
+                })
               },
               (error: any) => {
-                this.errorService.handleError(error);
+                this.errorService.handleError(error)
               }
-            );
+            )
       },
       (error: any) => {
-        this.errorService.handleError(error);
+        this.errorService.handleError(error)
       }
-    );
+    )
   }
 
   toggleConnectMode() {
     this.oss.dispatch({
       type: SET_CONNECT_MODE,
       payload: !this.oss.connectMode()
-    });
+    })
   }
 
   ngOnInit() {
@@ -439,13 +437,13 @@ export class FlowTabsComponent implements OnInit {
       function(rpt: string) {
         this.flowService.instances(rpt).subscribe(
           (instances: Array<FlowInstance>) => {
-            let flowTabs: FlowTab[] = instances.map(
+            const flowTabs: FlowTab[] = instances.map(
               (flowInstance: FlowInstance) => {
-                return UIUtils.toFlowTab(flowInstance);
+                return UIUtils.toFlowTab(flowInstance)
               }
-            );
+            )
 
-            this.addFlowTabs(flowTabs);
+            this.addFlowTabs(flowTabs)
 
             if (flowTabs.length > 0)
               this.oss.dispatch({
@@ -454,40 +452,43 @@ export class FlowTabsComponent implements OnInit {
                   id: this.oss.activeFlowTab().flowInstance.id,
                   type: EntityType.FLOW_INSTANCE
                 }
-              });
+              })
           },
           (error: any) => this.errorService.handleError(error)
-        );
+        )
       }.bind(this)
-    );
+    )
 
     this.stopFlowBarItem = {
       view: UiId.ANALYSE,
       entityType: EntityType.FLOW_INSTANCE,
       iconClass: "fa-stop",
       enabled: false,
+      hidden: false,
       command: event => {
-        this.stopFlow(this.activeTab());
+        this.stopFlow(this.activeTab())
       }
-    };
+    }
     this.startFlowBarItem = {
       view: UiId.ANALYSE,
       entityType: EntityType.FLOW_INSTANCE,
       iconClass: "fa-play",
       enabled: true,
+      hidden: false,
       command: event => {
-        this.startFlow(this.activeTab());
+        this.startFlow(this.activeTab())
       }
-    };
+    }
 
-    let cbItems: ContextBarItem[] = [
+    const cbItems: ContextBarItem[] = [
       {
         view: UiId.ANALYSE,
         entityType: EntityType.FLOW_INSTANCE,
         iconClass: "fa-trash",
         enabled: true,
+        hidden: false,
         command: event => {
-          this.deleteTab(this.activeTab());
+          this.deleteTab(this.activeTab())
         }
       },
       {
@@ -495,8 +496,9 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.FLOW_INSTANCE,
         iconClass: "fa-plus-circle",
         enabled: true,
+        hidden: false,
         command: event => {
-          this.showProcessorConfDialog();
+          this.showProcessorConfDialog()
         }
       },
       this.stopFlowBarItem,
@@ -506,8 +508,9 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.FLOW_INSTANCE,
         iconClass: "fa-refresh",
         enabled: true,
+        hidden: false,
         command: event => {
-          this.refreshFlow(this.activeTab());
+          this.refreshFlow(this.activeTab())
         }
       },
       {
@@ -515,8 +518,9 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.FLOW_INSTANCE,
         iconClass: "fa-plug",
         enabled: true,
+        hidden: false,
         command: event => {
-          this.toggleConnectMode();
+          this.toggleConnectMode()
         }
       },
       {
@@ -524,8 +528,9 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.PROCESSOR,
         iconClass: "fa-trash",
         enabled: true,
+        hidden: false,
         command: event => {
-          this.deleteSelectedProcessor();
+          this.deleteSelectedProcessor()
         }
       },
       {
@@ -533,8 +538,9 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.PROCESSOR,
         iconClass: "fa-link",
         enabled: true,
+        hidden: false,
         command: event => {
-          this.showRelationshipsInfoDialog();
+          this.showRelationshipsInfoDialog()
         }
       },
       {
@@ -544,7 +550,7 @@ export class FlowTabsComponent implements OnInit {
         enabled: true,
         hidden: true,
         command: () => {
-          this.uiStateStore.isProcessorSchemaDialogVisible = true;
+          this.uiStateStore.isProcessorSchemaDialogVisible = true
         }
       },
       {
@@ -554,7 +560,7 @@ export class FlowTabsComponent implements OnInit {
         enabled: true,
         hidden: true,
         command: () => {
-          this.showProcessorPropertiesDialog();
+          this.showProcessorPropertiesDialog()
         }
       },
       {
@@ -564,7 +570,7 @@ export class FlowTabsComponent implements OnInit {
         enabled: true,
         hidden: true,
         command: () => {
-          this.showProcessorInfoDialog();
+          this.showProcessorInfoDialog()
         }
       },
       {
@@ -572,8 +578,9 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.PROCESSOR,
         iconClass: "fa-plug",
         enabled: true,
+        hidden: false,
         command: event => {
-          this.toggleConnectMode();
+          this.toggleConnectMode()
         }
       },
       {
@@ -581,8 +588,9 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.CONNECTION,
         iconClass: "fa-trash",
         enabled: true,
+        hidden: false,
         command: event => {
-          this.deleteSelectedConnection();
+          this.deleteSelectedConnection()
         }
       },
       {
@@ -590,11 +598,12 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.CONNECTION,
         iconClass: "fa-plug",
         enabled: true,
+        hidden: false,
         command: event => {
-          this.toggleConnectMode();
+          this.toggleConnectMode()
         }
       }
-    ];
-    this.contextStore.addContextBar(UiId.ANALYSE, cbItems);
+    ]
+    this.contextStore.addContextBar(UiId.ANALYSE, cbItems)
   }
 }

@@ -5,15 +5,21 @@ import {
   EntityType
 } from "./../analyse/model/flow.model"
 import { Observable } from "rxjs/Observable"
+import "rxjs/add/operator/take"
+
 import { Injectable, NgZone } from "@angular/core"
 
 import { Action, Store } from "@ngrx/store"
 
 import { ImmutableArray, ImmutableObject } from "seamless-immutable"
 import * as SI from "seamless-immutable"
-import { isNullOrUndefined } from "util"
+
 import { Entity, Processor } from "../analyse/model/flow.model"
-import { ContextBarItem, UiId, Visibility, FlowEntityConf } from "./ui.models"
+// import { ContextBarItem, UiId, FlowEntityConf } from "./ui.models"
+import { AppAction } from "./reducers"
+import { Visibility } from "./ui.state.store"
+import { FlowEntityConf } from "./fields"
+import { ContextBarItem, UiId } from "./ui.models"
 
 /**
  * Created by cmathew on 01.07.17.
@@ -42,7 +48,7 @@ export class ObservableState {
     return this.store
   }
 
-  dispatch(action: Action) {
+  dispatch(action: AppAction) {
     return this.ngZone.run(() => this.store.dispatch(action))
   }
 

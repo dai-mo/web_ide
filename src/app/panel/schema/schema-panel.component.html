@@ -8,11 +8,11 @@
       </div>
     </ng-template>
     <ng-template let-node [pTemplate]="scp._FIELDS_TO_MAP">
-      <fields-to-map [processorField]="node.data"></fields-to-map>
+      <abk-fields-to-map [processorField]="node.data"></abk-fields-to-map>
       <i class="material-icons" (click)="removeLink(node)">close</i>
     </ng-template>
     <ng-template let-node [pTemplate]="scp._FIELD_ACTIONS">
-      <field-actions [processorField]="node.data"></field-actions>
+      <abk-field-actions [processorField]="node.data"></abk-field-actions>
       <i class="material-icons" (click)="removeLink(node)">close</i>
     </ng-template>
   </p-tree>

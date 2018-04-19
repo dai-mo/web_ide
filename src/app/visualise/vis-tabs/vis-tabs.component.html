@@ -1,16 +1,16 @@
 <div class="fill">
   <p-tabView class="fill" (onChange)="selectActiveTab($event.index)">
-    @*Workaround for https://github.com/primefaces/primeng/issues/2000*@
+    <!-- Workaround for https://github.com/primefaces/primeng/issues/2000 -->
     <p-tabPanel class="fill" *ngIf="uiStateStore.store.visTabs.length === 0" header="..." selected="true">
       Choose a visualisation for selected processor.
     </p-tabPanel>
     <p-tabPanel class="fill" *ngFor="let tabz of uiStateStore.visTabs | async" [header]="tabz.visType" [selected]="tabz.active">
       <div class="flex-panel flex-panel-parent" [ngSwitch]="tabz.visType">
-        <chart *ngSwitchCase="uiId.VIS_CHART" class="flex-panel overflow" [reload]="uiStateStore.provenances | async">
-        </chart>
-        <map *ngSwitchCase="uiId.VIS_MAP" class="flex-panel overflow" [show]="tabz.active" [resize]="uiStateStore.resizeView | async"
+        <abk-chart *ngSwitchCase="uiId.VIS_CHART" class="flex-panel overflow" [reload]="uiStateStore.provenances | async">
+        </abk-chart>
+        <abk-map *ngSwitchCase="uiId.VIS_MAP" class="flex-panel overflow" [show]="tabz.active" [resize]="uiStateStore.resizeView | async"
           [reload]="uiStateStore.provenances | async">
-        </map>
+        </abk-map>
       </div>
     </p-tabPanel>
   </p-tabView>
