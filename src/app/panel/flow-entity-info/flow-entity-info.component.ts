@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core"
 import { FormControl, FormGroup, Validators } from "@angular/forms"
-import { FieldGroup, Field, FieldUIType } from "../../state/ui.models"
+import { FieldGroup, Field, FieldUIType } from "../../state/fields"
 
 /**
  * Created by cmathew on 08.05.17.

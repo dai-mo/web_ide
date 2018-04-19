@@ -14,14 +14,12 @@ import { ErrorService } from "../../service/error.service"
 import { KeycloakService } from "../../service/keycloak.service"
 import { UIStateStore } from "../../state/ui.state.store"
 import { ContextStore } from "../../state/context.store"
+import { ContextBarItem, ContextMenuItem, UiId } from "../../state/ui.models"
 import {
-  ContextBarItem,
-  ContextMenuItem,
   FlowEntityConf,
   ProcessorConf,
-  ProcessorInfo,
-  UiId
-} from "../../state/ui.models"
+  ProcessorInfo
+} from "../../state/fields"
 import { NotificationService } from "../../service/notification.service"
 import { AppState, ObservableState } from "../../state/state"
 import {
@@ -41,7 +39,7 @@ import { ConnectionService } from "../service/connection.service"
 import { ProcessorPropertiesConf } from "../../panel/processor-properties.conf"
 
 @Component({
-  selector: "flow-tabs",
+  selector: "abk-flow-tabs",
   templateUrl: "./flow-tabs.component.html",
   styleUrls: ["./flow-tabs.component.scss"]
 })
@@ -67,8 +65,8 @@ export class FlowTabsComponent implements OnInit {
     private flowService: FlowService,
     private errorService: ErrorService,
     private notificationService: NotificationService,
-    private oss: ObservableState,
-    private uiStateStore: UIStateStore,
+    public oss: ObservableState,
+    public uiStateStore: UIStateStore,
     private processorService: ProcessorService,
     private connectionService: ConnectionService,
     private contextStore: ContextStore
@@ -466,6 +464,7 @@ export class FlowTabsComponent implements OnInit {
       entityType: EntityType.FLOW_INSTANCE,
       iconClass: "fa-stop",
       enabled: false,
+      hidden: false,
       command: event => {
         this.stopFlow(this.activeTab())
       }
@@ -475,6 +474,7 @@ export class FlowTabsComponent implements OnInit {
       entityType: EntityType.FLOW_INSTANCE,
       iconClass: "fa-play",
       enabled: true,
+      hidden: false,
       command: event => {
         this.startFlow(this.activeTab())
       }
@@ -486,6 +486,7 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.FLOW_INSTANCE,
         iconClass: "fa-trash",
         enabled: true,
+        hidden: false,
         command: event => {
           this.deleteTab(this.activeTab())
         }
@@ -495,6 +496,7 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.FLOW_INSTANCE,
         iconClass: "fa-plus-circle",
         enabled: true,
+        hidden: false,
         command: event => {
           this.showProcessorConfDialog()
         }
@@ -506,6 +508,7 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.FLOW_INSTANCE,
         iconClass: "fa-refresh",
         enabled: true,
+        hidden: false,
         command: event => {
           this.refreshFlow(this.activeTab())
         }
@@ -515,6 +518,7 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.FLOW_INSTANCE,
         iconClass: "fa-plug",
         enabled: true,
+        hidden: false,
         command: event => {
           this.toggleConnectMode()
         }
@@ -524,6 +528,7 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.PROCESSOR,
         iconClass: "fa-trash",
         enabled: true,
+        hidden: false,
         command: event => {
           this.deleteSelectedProcessor()
         }
@@ -533,6 +538,7 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.PROCESSOR,
         iconClass: "fa-link",
         enabled: true,
+        hidden: false,
         command: event => {
           this.showRelationshipsInfoDialog()
         }
@@ -572,6 +578,7 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.PROCESSOR,
         iconClass: "fa-plug",
         enabled: true,
+        hidden: false,
         command: event => {
           this.toggleConnectMode()
         }
@@ -581,6 +588,7 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.CONNECTION,
         iconClass: "fa-trash",
         enabled: true,
+        hidden: false,
         command: event => {
           this.deleteSelectedConnection()
         }
@@ -590,6 +598,7 @@ export class FlowTabsComponent implements OnInit {
         entityType: EntityType.CONNECTION,
         iconClass: "fa-plug",
         enabled: true,
+        hidden: false,
         command: event => {
           this.toggleConnectMode()
         }

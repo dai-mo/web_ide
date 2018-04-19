@@ -9,11 +9,11 @@ import {
   FieldGroup,
   FlowEntityConf,
   FlowEntityStatus
-} from "../../state/ui.models"
+} from "../../state/fields"
 import { UIStateStore } from "../../state/ui.state.store"
-import * as SI from "seamless-immutable"
 import { AppState, ObservableState } from "../../state//state"
 import { Observable } from "rxjs/Observable"
+import * as SI from "seamless-immutable"
 
 @Component({
   selector: "abk-flow-entity",

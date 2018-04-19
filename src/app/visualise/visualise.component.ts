@@ -15,7 +15,7 @@ import { VisTab } from "../analyse/model/flow.model"
 })
 export class VisualiseComponent implements OnInit {
   constructor(
-    private uiStateStore: UIStateStore,
+    public uiStateStore: UIStateStore,
     private contextStore: ContextStore,
     private errorService: ErrorService
   ) {}

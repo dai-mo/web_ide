@@ -1,9 +1,4 @@
-import {
-  Field,
-  FieldGroup,
-  FlowEntity,
-  FlowEntityConf
-} from "../state/ui.models"
+import { Field, FieldGroup, FlowEntity, FlowEntityConf } from "../state/fields"
 import {
   EntityType,
   FlowInstance,

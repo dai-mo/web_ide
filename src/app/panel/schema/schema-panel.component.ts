@@ -17,6 +17,8 @@ import { AppState, ObservableState } from "../../state//state"
 import { Store } from "@ngrx/store"
 import { UPDATE_CURRENT_PROCESSOR_PROPERTIES } from "../../state//reducers"
 import * as _ from "lodash"
+import { Observable } from "rxjs/Observable"
+import "rxjs/add/operator/mergeMap"
 
 /**
  * Created by cmathew on 23.05.17.
@@ -47,6 +49,16 @@ export class SchemaPanelComponent implements OnInit {
 
   scp = SchemaProperties
 
+  collect = function(): any {
+    const schemaFields: any[] = []
+    const props: any = {}
+    if (this.rootNode !== undefined) {
+      this.currentSchemaFields(this.rootNode, schemaFields)
+      props[this.mappedFieldName] = JSON.stringify(schemaFields)
+    }
+    return props
+  }.bind(this)
+
   constructor(
     private schemaService: SchemaService,
     private uiStateStore: UIStateStore,
@@ -69,23 +81,25 @@ export class SchemaPanelComponent implements OnInit {
       this.mappedFieldName === undefined
     )
     if (this.baseSchema !== undefined) {
-      let outputSchema = this.schemaService.outputSchema(
+      const outputSchema = this.schemaService.outputSchema(
         this.processor.properties
       )
       this.rootNode = { label: "$" }
       this.rootNode.expanded = true
       this.addSelectedNode(this.rootNode)
 
-      this.baseSchema.flatMap(bs => outputSchema.map(ws => [bs, ws])).subscribe(
-        (bws: [AvroSchema, AvroSchema]) => {
-          this.schemaNamespace = bws[0].namespace
-          this.schemaName = bws[0].name
-          this.buildTree(bws[0], bws[1], this.rootNode)
-        },
-        (error: any) => {
-          this.errorService.handleError(error)
-        }
-      )
+      this.baseSchema
+        .flatMap((bs: AvroSchema) => outputSchema.map(ws => [bs, ws]))
+        .subscribe(
+          (bws: [AvroSchema, AvroSchema]) => {
+            this.schemaNamespace = bws[0].namespace
+            this.schemaName = bws[0].name
+            this.buildTree(bws[0], bws[1], this.rootNode)
+          },
+          (error: any) => {
+            this.errorService.handleError(error)
+          }
+        )
       this.nodes.push(this.rootNode)
     }
   }
@@ -100,7 +114,7 @@ export class SchemaPanelComponent implements OnInit {
     writeSchemaType: AvroSchemaType,
     parentTreeNode: TreeNode
   ) {
-    let children: TreeNode[] = baseSchemaType.fields.map(
+    const children: TreeNode[] = baseSchemaType.fields.map(
       (f: AvroSchemaField) => {
         let child: TreeNode
         let writeField: any
@@ -127,7 +141,7 @@ export class SchemaPanelComponent implements OnInit {
 
         child.data = f
 
-        let childSchemaPath = this.schemaFieldPath(child)
+        const childSchemaPath = this.schemaFieldPath(child)
         this.processorSchemaFields.forEach(psf => {
           psf.forEach((sf: any) => {
             if (
@@ -168,7 +182,7 @@ export class SchemaPanelComponent implements OnInit {
 
   nodeType(node: TreeNode): string {
     if (node.data !== undefined) {
-      let type = node.data.type
+      const type = node.data.type
       if (_.isArray(type)) return type[1]
       else if (_.isObject(type)) {
         if (type.name !== undefined) return type.name
@@ -187,7 +201,7 @@ export class SchemaPanelComponent implements OnInit {
   }
 
   nodesToAdd(): TreeNode[] {
-    let nodes = this.selectedNodes
+    const nodes = this.selectedNodes
       .filter(sn => this.initialNodes.find(n => sn === n) === undefined)
       .filter(sn => sn.partialSelected === undefined || !sn.partialSelected)
 
@@ -230,7 +244,7 @@ export class SchemaPanelComponent implements OnInit {
   }
 
   cleanSchemaActions(schemaActions: SchemaAction[]): SchemaAction[] {
-    let actions: SchemaAction[] = []
+    const actions: SchemaAction[] = []
     schemaActions.forEach(sa => {
       if (
         schemaActions.find(
@@ -262,11 +276,11 @@ export class SchemaPanelComponent implements OnInit {
   }
 
   updateSchemaFields() {
-    let schemaFields: any[] = []
+    const schemaFields: any[] = []
     if (this.rootNode !== undefined) {
       this.currentSchemaFields(this.rootNode, schemaFields)
 
-      let props: any = {}
+      const props: any = {}
       props[this.mappedFieldName] = JSON.stringify(schemaFields)
 
       this.store.dispatch({
@@ -276,18 +290,8 @@ export class SchemaPanelComponent implements OnInit {
     }
   }
 
-  collect = function(): any {
-    let schemaFields: any[] = []
-    let props: any = {}
-    if (this.rootNode !== undefined) {
-      this.currentSchemaFields(this.rootNode, schemaFields)
-      props[this.mappedFieldName] = JSON.stringify(schemaFields)
-    }
-    return props
-  }.bind(this)
-
   nodeDrop(event: any, node: TreeNode) {
-    let param = this.dndStore.pSchemaParameter
+    const param = this.dndStore.pSchemaParameter
     param.jsonPath = this.schemaFieldPath(node)
     this.addChildField(node, param)
     this.updateSchemaFields()

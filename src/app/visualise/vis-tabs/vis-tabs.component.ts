@@ -17,7 +17,7 @@ export class VisTabsComponent {
 
   @Input() selectedVisType: string
 
-  constructor(private uiStateStore: UIStateStore) {}
+  constructor(public uiStateStore: UIStateStore) {}
 
   public selectActiveTab(index: number): void {
     const at = this.uiStateStore.getVisTabs()[index]

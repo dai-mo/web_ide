@@ -23,7 +23,7 @@ export class ProcessorSchemaComponent {
 
   constructor(
     private uiStateStore: UIStateStore,
-    private oss: ObservableState,
+    public oss: ObservableState,
     private flowService: FlowService,
     private errorService: ErrorService
   ) {}

@@ -6,13 +6,8 @@ import { FlowService } from "./service/flow.service"
 import { ErrorService } from "../service/error.service"
 import { FlowTemplate } from "./model/flow.model"
 import { UIStateStore } from "../state/ui.state.store"
-import {
-  ContextMenuItem,
-  FlowCreation,
-  FlowEntityConf,
-  TemplateInfo,
-  UiId
-} from "../state/ui.models"
+import { ContextMenuItem, UiId } from "../state/ui.models"
+import { FlowCreation, FlowEntityConf, TemplateInfo } from "../state/fields"
 import { ContextStore } from "../state/context.store"
 import { AppState, ObservableState } from "../state/state"
 import { Observable } from "rxjs/Observable"
@@ -37,7 +32,7 @@ export class AnalyseComponent implements OnInit {
     private flowService: FlowService,
     private oss: ObservableState,
     private errorService: ErrorService,
-    private uiStateStore: UIStateStore,
+    public uiStateStore: UIStateStore,
     private contextStore: ContextStore
   ) {}
 

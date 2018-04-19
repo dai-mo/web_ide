@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from "@angular/core"
 import { SchemaPanelComponent } from "../schema/schema-panel.component"
-import { Field } from "../../state/ui.models"
+import { Field } from "../../state/fields"
 import { SelectItem } from "primeng/primeng"
 import { UIStateStore } from "../../state/ui.state.store"
 import { ObservableState } from "../../state/state"

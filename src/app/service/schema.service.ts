@@ -5,8 +5,11 @@
 import { Injectable } from "@angular/core"
 import { Http } from "@angular/http"
 import { ApiHttpService } from "../http/api-http.service"
-import { Observable } from "rxjs/Observable"
+
 import { Processor } from "../analyse/model/flow.model"
+
+import { Observable } from "rxjs/Observable"
+import { of } from "rxjs/observable/of"
 
 export class AvroSchemaField {
   name: string
@@ -135,7 +138,7 @@ export class SchemaService extends ApiHttpService {
 
   readSchema(processorProperties: any): Observable<AvroSchema> {
     if (this.isPropertyDefined(processorProperties._READ_SCHEMA))
-      return Observable.of(JSON.parse(processorProperties._READ_SCHEMA))
+      return of(JSON.parse(processorProperties._READ_SCHEMA))
 
     if (this.isPropertyDefined(processorProperties._READ_SCHEMA_ID))
       return this.schemaFromId(processorProperties._READ_SCHEMA_ID)
@@ -145,7 +148,7 @@ export class SchemaService extends ApiHttpService {
 
   writeSchema(processorProperties: any): Observable<AvroSchema> {
     if (this.isPropertyDefined(processorProperties._WRITE_SCHEMA))
-      return Observable.of(JSON.parse(processorProperties._WRITE_SCHEMA))
+      return of(JSON.parse(processorProperties._WRITE_SCHEMA))
 
     if (this.isPropertyDefined(processorProperties._WRITE_SCHEMA_ID))
       return this.schemaFromId(processorProperties._WRITE_SCHEMA_ID)
@@ -156,7 +159,7 @@ export class SchemaService extends ApiHttpService {
   schemaFromId(schemaId: string): Observable<AvroSchema> {
     if (schemaId) {
       const cachedSchema = this.schemaCache.get(schemaId)
-      if (cachedSchema) return Observable.of(cachedSchema)
+      if (cachedSchema) return of(cachedSchema)
       else
         return this.schema(schemaId).map(rs => {
           this.schemaCache.set(schemaId, rs)

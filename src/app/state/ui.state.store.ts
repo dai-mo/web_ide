@@ -18,7 +18,7 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject"
 //        Only state related to the UI should remain here.
 @Injectable()
 export class UIStateStore {
-  private store: {
+  public store: {
     flowTabs: FlowTab[]
     visTabs: VisTab[]
   }
@@ -337,4 +337,8 @@ export class UIStateStore {
     )
   }
   // ---- Dialog Flags End   ----
+}
+
+export class Visibility {
+  isProcessorPropertiesDialogVisible = false
 }
