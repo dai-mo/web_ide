@@ -1,3 +1,4 @@
+import { UIStateStore } from "./state/ui.state.store"
 /**
  * Created by cmathew on 12/07/16.
  */
@@ -6,6 +7,7 @@
  */
 
 import { Component, Injector } from "@angular/core"
+import { ObservableState } from "./state/state"
 
 @Component({
   selector: "abk-root",
@@ -13,7 +15,7 @@ import { Component, Injector } from "@angular/core"
   styleUrls: ["./app.component.scss"]
 })
 export class AppComponent {
-  constructor(private injector: Injector) {
+  constructor(private injector: Injector, public uss: UIStateStore) {
     ServiceLocator.injector = injector
     // this.flowService.genClientId()
   }

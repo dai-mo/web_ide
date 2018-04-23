@@ -19,7 +19,7 @@ import { Entity, Processor } from "../analyse/model/flow.model"
 import { AppAction } from "./reducers"
 import { Visibility } from "./ui.state.store"
 import { FlowEntityConf } from "./fields"
-import { ContextBarItem, UiId } from "./ui.models"
+import { ContextBarItem, UiId, ModalMessage } from "./ui.models"
 
 /**
  * Created by cmathew on 01.07.17.
@@ -34,7 +34,7 @@ export class ObservableState {
   }
 
   appState(): AppState {
-    let state: AppState
+    let state: AppState = initialAppState
 
     this.store.take(1).subscribe((s: AppState) => (state = s))
 
@@ -111,6 +111,10 @@ export class ObservableState {
       .map(fts => fts.find(ft => ft.active))
   }
 
+  modalMessage$(): Observable<ModalMessage> {
+    return this.appStore().select(state => state.modalMessage)
+  }
+
   hideContextBarItem(cbItem: ContextBarItem): Observable<boolean> {
     return this.selectedEntity.map((se: Entity) => {
       switch (cbItem.view) {
@@ -143,6 +147,7 @@ export interface AppState {
   selectedFlowEntityConf: FlowEntityConf
   connectMode: boolean
   visibility: Visibility
+  modalMessage: ModalMessage
 }
 
 export const initialAppState: AppState = {
@@ -152,5 +157,6 @@ export const initialAppState: AppState = {
   currentProcessorProperties: undefined,
   selectedFlowEntityConf: undefined,
   connectMode: false,
-  visibility: new Visibility()
+  visibility: new Visibility(),
+  modalMessage: new ModalMessage(false, "", "", false)
 }

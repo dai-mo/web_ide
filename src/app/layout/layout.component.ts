@@ -4,6 +4,7 @@
 import { Component } from "@angular/core"
 import { UiId } from "../state/ui.models"
 import { UIStateStore } from "../state/ui.state.store"
+import { ObservableState } from "../state/state"
 
 @Component({
   selector: "abk-layout",
@@ -13,5 +14,8 @@ import { UIStateStore } from "../state/ui.state.store"
 export class LayoutComponent {
   uiId = UiId
 
-  constructor(private uiStateStore: UIStateStore) {}
+  constructor(
+    private uiStateStore: UIStateStore,
+    public oss: ObservableState
+  ) {}
 }

@@ -1,1 +1,5 @@
-<router-outlet></router-outlet>
+<p-panel *ngIf="!uss.isServerCheckSucessful" header="Server Not Avaliable">
+  Could not connect to alambeek web api
+</p-panel>
+
+<router-outlet *ngIf="uss.isServerCheckSucessful"></router-outlet>
