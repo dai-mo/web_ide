@@ -1,3 +1,4 @@
+import { UIStateStore } from "./../state/ui.state.store"
 import {
   Headers,
   Http,
@@ -13,10 +14,9 @@ import { ObservableState } from "../state/state"
  */
 
 export class ApiHttpService {
-  protected flowClientId: string
-  protected clientIdUrl = "api/cid"
-
   protected http: Http
+  protected flowClientId: string
+  protected clientIdUrl: string = UIStateStore.appConfig.baseUrl + "/api/cid"
 
   constructor() {
     this.http = ServiceLocator.injector.get(Http)
@@ -39,7 +39,12 @@ export class ApiHttpService {
     return ro
   }
 
+  private apiUrl(url: string) {
+    return UIStateStore.appConfig.baseUrl + "/" + url
+  }
+
   genClientId(): void {
+    const ciu = this.clientIdUrl
     this.http
       .get(this.clientIdUrl)
       .map(response => response.json())
@@ -48,7 +53,7 @@ export class ApiHttpService {
 
   get<T>(url: string, rpt?: string, options?: RequestOptions): Observable<T> {
     return this.http
-      .get(url, this.updateHeaders(options, rpt))
+      .get(this.apiUrl(url), this.updateHeaders(options, rpt))
       .map(response => response.json())
   }
 
@@ -59,7 +64,7 @@ export class ApiHttpService {
     options?: RequestOptions
   ): Observable<T> {
     return this.http
-      .post(url, body, this.updateHeaders(options, rpt))
+      .post(this.apiUrl(url), body, this.updateHeaders(options, rpt))
       .map(response => response.json())
   }
 
@@ -71,7 +76,7 @@ export class ApiHttpService {
     options?: RequestOptions
   ): Observable<T> {
     return this.http
-      .put(url, body, this.updateHeaders(options, rpt, version))
+      .put(this.apiUrl(url), body, this.updateHeaders(options, rpt, version))
       .map(response => response.json())
   }
 
@@ -82,7 +87,11 @@ export class ApiHttpService {
     options?: RequestOptions
   ): Observable<boolean> {
     return this.http
-      .delete(url, this.updateHeaders(options, rpt, version))
+      .delete(this.apiUrl(url), this.updateHeaders(options, rpt, version))
       .map(response => response.json())
   }
+}
+
+export class Health {
+  version: string
 }

@@ -77,12 +77,7 @@ export class FlowService extends ApiHttpService {
       .map(response => response.json())
   }
   instances(rpt: string): Observable<Array<FlowInstance>> {
-    return this.http
-      .get(
-        this.instancesBaseUrl,
-        this.updateFlowHeaders(new RequestOptions(), rpt)
-      )
-      .map(response => response.json())
+    return this.get(this.instancesBaseUrl, rpt, new RequestOptions())
   }
 
   startInstance(flowInstanceId: string): Observable<boolean> {

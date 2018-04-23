@@ -38,8 +38,6 @@ import { NotificationService } from "../service//notification.service"
  * Created by cmathew on 04.05.17.
  */
 
-
-
 export interface Msg extends Message {}
 
 export class MsgGroup {
@@ -51,6 +49,24 @@ export class MsgGroup {
     this.messages = messages
     this.sticky = sticky
     this.delay = delay
+  }
+}
+
+export class ModalMessage {
+  visible: boolean
+  title: string
+  content: string
+  closable: boolean
+
+  constructor(
+    visible: boolean,
+    title: string,
+    message: string,
+    closable: boolean
+  ) {
+    this.visible = visible
+    this.content = message
+    this.closable = closable
   }
 }
 
@@ -72,7 +88,6 @@ export class ContextBarItem {
   hidden = false
   command: (event: any) => void
 }
-
 
 export class ViewsVisible {
   analyse: boolean

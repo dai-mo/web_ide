@@ -1,6 +1,7 @@
+import { ApiHttpService, Health } from "./http/api-http.service"
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic"
-import { ModuleWithProviders, NgModule } from "@angular/core"
-import { HttpModule } from "@angular/http"
+import { ModuleWithProviders, NgModule, APP_INITIALIZER } from "@angular/core"
+import { HttpModule, Http } from "@angular/http"
 import { AppComponent } from "./app.component"
 
 import { BrowserModule } from "@angular/platform-browser"
@@ -94,7 +95,7 @@ import { ProcessorService } from "./service/processor.service"
 import { VisTabsComponent } from "./visualise/vis-tabs/vis-tabs.component"
 import { FlowService } from "./analyse/service/flow.service"
 import { ConnectionService } from "./analyse/service/connection.service"
-import { UIStateStore } from "./state/ui.state.store"
+import { UIStateStore, AppConfig } from "./state/ui.state.store"
 import { DnDStore } from "./state/dnd.store"
 import { ContextStore } from "./state/context.store"
 import { KeycloakService } from "./service/keycloak.service"
@@ -102,11 +103,33 @@ import { ErrorService } from "./service/error.service"
 import { NotificationService } from "./service/notification.service"
 import { SchemaService } from "./service/schema.service"
 import { ObservableState } from "./state/state"
-import { rootReducer } from "./state/reducers"
+import { rootReducer, NEW_MODAL_MESSAGE } from "./state/reducers"
+import { ModalMessageComponent } from "./panel/modal-message/modal-message.component"
+import { ModalMessage } from "./state/ui.models"
 
 export const routes: Routes = [{ path: "", component: LayoutComponent }]
 
 export const AppRoutes: ModuleWithProviders = RouterModule.forRoot(routes)
+
+export function startupServiceFactory(http: Http, uss: UIStateStore): Function {
+  return () => {
+    const configUrl = "./assets/appConfig.json"
+    return http
+      .get(configUrl)
+      .map((appConfigResponse: any) => {
+        UIStateStore.appConfig = appConfigResponse.json()
+        return appConfigResponse.json()
+      })
+      .flatMap((appConfig: AppConfig) => {
+        return http.get(appConfig.baseUrl + "/api/health")
+      })
+      .map((healthResponse: any) => healthResponse.json())
+      .toPromise()
+      .catch((error: any) => {
+        uss.isServerCheckSucessful = false
+      })
+  }
+}
 
 @NgModule({
   declarations: [
@@ -130,10 +153,17 @@ export const AppRoutes: ModuleWithProviders = RouterModule.forRoot(routes)
     SchemaPropertyComponent,
     FieldsToMapComponent,
     FieldActionsComponent,
-    RelationshipsComponent
+    RelationshipsComponent,
+    ModalMessageComponent
   ],
   providers: [
     { provide: Window, useValue: window },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: startupServiceFactory,
+      deps: [Http, UIStateStore],
+      multi: true
+    },
     FlowService,
     ProcessorService,
     ConnectionService,

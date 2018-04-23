@@ -1,3 +1,4 @@
+import { ModalMessage } from "./ui.models"
 /**
  * Created by cmathew on 03.07.17.
  */
@@ -38,6 +39,8 @@ export const SET_CONNECT_MODE = "SET_CONNECT_MODE"
 
 export const UPDATE_PROCESSOR_PROPERTIES_DIALOG_VISIBILITY =
   "UPDATE_PROCESSOR_PROPERTIES_DIALOG_VISIBILITY"
+
+export const NEW_MODAL_MESSAGE = "NEW_MODAL_MESSAGE"
 
 export class AppAction implements Action {
   type: string
@@ -195,6 +198,18 @@ export function visibility(
         isProcessorPropertiesDialogVisible: action.payload
       })
 
+    default:
+      return state
+  }
+}
+
+export function modalMessage(
+  state: ModalMessage = initialAppState.modalMessage,
+  action: AppAction
+): ModalMessage {
+  switch (action.type) {
+    case NEW_MODAL_MESSAGE:
+      return action.payload
     default:
       return state
   }

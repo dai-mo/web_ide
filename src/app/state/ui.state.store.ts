@@ -16,8 +16,14 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject"
 
 // FIXME: All elements of this class related to application state should be moved to ObservableState
 //        Only state related to the UI should remain here.
+
+export class AppConfig {
+  baseUrl = "https://api.alambeek.org"
+}
 @Injectable()
 export class UIStateStore {
+  public static appConfig: AppConfig = new AppConfig()
+
   public store: {
     flowTabs: FlowTab[]
     visTabs: VisTab[]
@@ -104,6 +110,7 @@ export class UIStateStore {
   public isFlowCreationDialogVisible = false
   public isRelationshipsInfoDialogVisible = false
   public isRelationshipsSettingsDialogVisible = false
+  public isServerCheckSucessful = true
 
   private _displayMesssages: BehaviorSubject<MsgGroup> = new BehaviorSubject({
     messages: [],
