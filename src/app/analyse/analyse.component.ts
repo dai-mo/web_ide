@@ -1,17 +1,27 @@
 /**
  * Created by cmathew on 14/07/16.
  */
-import { Component, OnInit } from "@angular/core"
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ChangeDetectorRef,
+  AfterViewChecked,
+  OnChanges
+} from "@angular/core"
 import { FlowService } from "./service/flow.service"
 import { ErrorService } from "../service/error.service"
 import { FlowTemplate } from "./model/flow.model"
 import { UIStateStore } from "../state/ui.state.store"
 import { ContextMenuItem, UiId } from "../state/ui.models"
 import { FlowCreation, FlowEntityConf, TemplateInfo } from "../state/fields"
-import { ContextStore } from "../state/context.store"
+
 import { AppState, ObservableState } from "../state/state"
 import { Observable } from "rxjs/Observable"
-import { UPDATE_SELECTED_FLOW_ENTITY_CONF } from "../state/reducers"
+import {
+  UPDATE_SELECTED_FLOW_ENTITY_CONF,
+  ADD_CONTEXT_MENU_ITEMS
+} from "../state/reducers"
 
 @Component({
   selector: "abk-analyse",
@@ -32,8 +42,7 @@ export class AnalyseComponent implements OnInit {
     private flowService: FlowService,
     private oss: ObservableState,
     private errorService: ErrorService,
-    public uiStateStore: UIStateStore,
-    private contextStore: ContextStore
+    public uiStateStore: UIStateStore
   ) {}
 
   getTemplates() {
@@ -53,23 +62,7 @@ export class AnalyseComponent implements OnInit {
     )
   }
 
-  ngOnInit() {
-    const cmItems: ContextMenuItem[] = [
-      {
-        label: "Instantiate Flow",
-        command: event => {
-          this.showTemplateInfoDialog()
-        }
-      },
-      {
-        label: "Create Flow",
-        command: event => {
-          this.showFlowCreationDialog()
-        }
-      }
-    ]
-    this.contextStore.addContextMenu(UiId.ANALYSE, cmItems)
-  }
+  ngOnInit() {}
 
   showTemplateInfoDialog() {
     this.getTemplates()

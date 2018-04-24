@@ -13,7 +13,7 @@ import { FlowService } from "../service/flow.service"
 import { ErrorService } from "../../service/error.service"
 import { KeycloakService } from "../../service/keycloak.service"
 import { UIStateStore } from "../../state/ui.state.store"
-import { ContextStore } from "../../state/context.store"
+
 import { ContextBarItem, ContextMenuItem, UiId } from "../../state/ui.models"
 import {
   FlowEntityConf,
@@ -30,7 +30,8 @@ import {
   SET_CONNECT_MODE,
   UPDATE_FLOW_INSTANCE,
   UPDATE_FLOW_INSTANCE_STATE,
-  UPDATE_SELECTED_FLOW_ENTITY_CONF
+  UPDATE_SELECTED_FLOW_ENTITY_CONF,
+  ADD_CONTEXT_BAR_ITEMS
 } from "../../state/reducers"
 import { ProcessorService } from "../../service/processor.service"
 import { Observable } from "rxjs/Observable"
@@ -68,8 +69,7 @@ export class FlowTabsComponent implements OnInit {
     public oss: ObservableState,
     public uiStateStore: UIStateStore,
     private processorService: ProcessorService,
-    private connectionService: ConnectionService,
-    private contextStore: ContextStore
+    private connectionService: ConnectionService
   ) {
     this.nifiUrl =
       window.location.protocol + "//" + window.location.host + "/nifi"
@@ -604,6 +604,13 @@ export class FlowTabsComponent implements OnInit {
         }
       }
     ]
-    this.contextStore.addContextBar(UiId.ANALYSE, cbItems)
+
+    this.oss.dispatch({
+      type: ADD_CONTEXT_BAR_ITEMS,
+      payload: {
+        key: UiId.ANALYSE,
+        items: cbItems
+      }
+    })
   }
 }

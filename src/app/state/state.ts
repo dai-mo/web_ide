@@ -19,7 +19,12 @@ import { Entity, Processor } from "../analyse/model/flow.model"
 import { AppAction } from "./reducers"
 import { Visibility } from "./ui.state.store"
 import { FlowEntityConf } from "./fields"
-import { ContextBarItem, UiId, ModalMessage } from "./ui.models"
+import {
+  ContextBarItem,
+  UiId,
+  ModalMessage,
+  ContextMenuItem
+} from "./ui.models"
 
 /**
  * Created by cmathew on 01.07.17.
@@ -101,6 +106,10 @@ export class ObservableState {
     )
   }
 
+  flowTabs$(): Observable<FlowTab[]> {
+    return this.appStore().select((state: AppState) => state.flowTabs)
+  }
+
   activeFlowTab(): FlowTab {
     return this.appState().flowTabs.find(ft => ft.active)
   }
@@ -137,6 +146,32 @@ export class ObservableState {
   visibility(): Visibility {
     return this.appState().visibility
   }
+
+  contextMenuItems$(key: string): Observable<ContextMenuItem[]> {
+    return this.appStore().select((state: AppState) =>
+      state.contextMenuItems.get(key)
+    )
+  }
+
+  contextBarItems$(key: string): Observable<ContextBarItem[]> {
+    return this.appStore().select((state: AppState) =>
+      state.contextBarItems.get(key)
+    )
+  }
+
+  updateAnalyseContextItems(processorId: string) {
+    return this.appState()
+      .contextBarItems.get(UiId.ANALYSE)
+      .forEach(cbItem => {
+        if (cbItem.entityType === EntityType.PROCESSOR)
+          if (processorId === "") cbItem.hidden = true
+          else cbItem.hidden = false
+        else {
+          if (processorId === "") cbItem.hidden = false
+          else cbItem.hidden = true
+        }
+      })
+  }
 }
 
 export interface AppState {
@@ -148,6 +183,8 @@ export interface AppState {
   connectMode: boolean
   visibility: Visibility
   modalMessage: ModalMessage
+  contextMenuItems: Map<string, ContextMenuItem[]>
+  contextBarItems: Map<string, ContextBarItem[]>
 }
 
 export const initialAppState: AppState = {
@@ -158,5 +195,7 @@ export const initialAppState: AppState = {
   selectedFlowEntityConf: undefined,
   connectMode: false,
   visibility: new Visibility(),
-  modalMessage: new ModalMessage(false, "", "", false)
+  modalMessage: new ModalMessage(false, "", "", false),
+  contextMenuItems: new Map<string, ContextMenuItem[]>(),
+  contextBarItems: new Map<string, ContextBarItem[]>()
 }

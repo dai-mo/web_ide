@@ -15,8 +15,8 @@ import {
 
 @Injectable()
 export class ConnectionService extends ApiHttpService {
-  private readonly connectionBaseUrl = "/api/flow/connection/"
-  private readonly extConnectionBaseUrl = "/api/flow/connection/external/"
+  private readonly connectionBaseUrl = "api/flow/connection/"
+  private readonly extConnectionBaseUrl = "api/flow/connection/external/"
 
   constructor(private oss: ObservableState) {
     super()

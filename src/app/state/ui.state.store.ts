@@ -10,7 +10,6 @@ import {
   VisTab
 } from "../analyse/model/flow.model"
 import { Msg, MsgGroup, UiId, ViewsVisible } from "./ui.models"
-import { ContextStore } from "./context.store"
 import { ObservableState } from "../state/state"
 import { BehaviorSubject } from "rxjs/BehaviorSubject"
 
@@ -124,7 +123,7 @@ export class UIStateStore {
   )
   private isSchemaUpdatable = this._isSchemaUpdatable.asObservable()
 
-  constructor(private contextStore: ContextStore, private ngZone: NgZone) {
+  constructor(private ngZone: NgZone) {
     this.store = {
       flowTabs: [],
       visTabs: []
@@ -182,18 +181,6 @@ export class UIStateStore {
     this.ngZone.run(() => this._selectedProcessorId.next(processorId))
     const selectedProcessor = this.getActiveFlowProcessor(processorId)
     this.ngZone.run(() => this._selectedProcessor.next(selectedProcessor))
-  }
-
-  updateAnalyseContextItems(processorId: string) {
-    this.contextStore.getContextBarItems(UiId.ANALYSE).forEach(cbItem => {
-      if (cbItem.entityType === EntityType.PROCESSOR)
-        if (processorId === "") cbItem.hidden = true
-        else cbItem.hidden = false
-      else {
-        if (processorId === "") cbItem.hidden = false
-        else cbItem.hidden = true
-      }
-    })
   }
 
   getSelectedProcessorId(): string {

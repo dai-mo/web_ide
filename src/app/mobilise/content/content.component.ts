@@ -9,8 +9,8 @@ import { FlowService } from "../../analyse/service/flow.service"
 import { ObservableState } from "../../state/state"
 import { ErrorService } from "../../service/error.service"
 import { UIStateStore } from "../../state/ui.state.store"
-import { ContextStore } from "../../state/context.store"
 import { ContextBarItem, UiId } from "../../state/ui.models"
+import { ADD_CONTEXT_BAR_ITEMS } from "../../state/reducers"
 
 @Component({
   selector: "abk-content",
@@ -37,8 +37,7 @@ export class ContentComponent implements OnInit {
     private flowService: FlowService,
     private oss: ObservableState,
     private errorService: ErrorService,
-    private uiStateStore: UIStateStore,
-    private contextStore: ContextStore
+    private uiStateStore: UIStateStore
   ) {}
 
   @Input()
@@ -77,7 +76,14 @@ export class ContentComponent implements OnInit {
         hidden: false
       }
     ]
-    this.contextStore.addContextBar(UiId.MOBILISE, cbItems)
+
+    this.oss.dispatch({
+      type: ADD_CONTEXT_BAR_ITEMS,
+      payload: {
+        key: UiId.MOBILISE,
+        items: cbItems
+      }
+    })
   }
 
   provenanceInfo(provenance: Provenance) {
