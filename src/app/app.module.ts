@@ -97,7 +97,6 @@ import { FlowService } from "./analyse/service/flow.service"
 import { ConnectionService } from "./analyse/service/connection.service"
 import { UIStateStore, AppConfig } from "./state/ui.state.store"
 import { DnDStore } from "./state/dnd.store"
-import { ContextStore } from "./state/context.store"
 import { KeycloakService } from "./service/keycloak.service"
 import { ErrorService } from "./service/error.service"
 import { NotificationService } from "./service/notification.service"
@@ -157,7 +156,6 @@ export function startupServiceFactory(http: Http, uss: UIStateStore): Function {
     ModalMessageComponent
   ],
   providers: [
-    { provide: Window, useValue: window },
     {
       provide: APP_INITIALIZER,
       useFactory: startupServiceFactory,
@@ -169,7 +167,6 @@ export function startupServiceFactory(http: Http, uss: UIStateStore): Function {
     ConnectionService,
     UIStateStore,
     DnDStore,
-    ContextStore,
     KeycloakService,
     ErrorService,
     NotificationService,

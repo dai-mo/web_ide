@@ -14,7 +14,7 @@ import {
 
 @Injectable()
 export class ProcessorService extends ApiHttpService {
-  private readonly processorBaseUrl = "/api/flow/processor/"
+  private readonly processorBaseUrl = "api/flow/processor/"
 
   processorUpdatePropertiesUrl(
     processorServiceClassName: string,

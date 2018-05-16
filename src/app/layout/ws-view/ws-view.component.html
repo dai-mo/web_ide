@@ -19,12 +19,12 @@
         </button>
       </div>
 
-      <div *ngIf="contextStore.contextMenuObs(name) | async as items" class="ui-toolbar-group-right">
-        <p-menu #menu appendTo="body" popup="popup" [model]="items"></p-menu>
+      <div *ngIf="oss.contextMenuItems$(name) | async as items" class="ui-toolbar-group-right">
+        <p-menu #menu appendTo="body" popup="popup" [model]="items" [style]="{'width': 'auto'}"></p-menu>
         <button pButton type="button" icon="font-awesome fa-bars" class="flat disable-highlight" (click)="menu.toggle($event)">
         </button>
       </div>
-      <div *ngFor="let cbItem of contextStore.contextBarObs(name) | async" class="ui-toolbar-group-right">
+      <div *ngFor="let cbItem of oss.contextBarItems$(name) | async" class="ui-toolbar-group-right">
         <button *ngIf="(flowTabs | async).length > 0" pButton type="button" icon="font-awesome {{cbItem.iconClass}}" class="flat disable-highlight"
           (click)="cbItem.command($event)" [disabled]="!cbItem.enabled" [hidden]="oss.hideContextBarItem(cbItem) | async">
         </button>

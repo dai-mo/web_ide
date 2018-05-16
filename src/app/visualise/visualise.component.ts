@@ -1,12 +1,13 @@
+import { ObservableState } from "./../state/state"
 /**
  * Created by cmathew on 14/07/16.
  */
 import { Component, OnInit } from "@angular/core"
 import { UIStateStore } from "../state/ui.state.store"
-import { ContextStore } from "../state/context.store"
 import { ErrorService } from "../service/error.service"
 import { ContextMenuItem, UiId } from "../state/ui.models"
 import { VisTab } from "../analyse/model/flow.model"
+import { ADD_CONTEXT_MENU_ITEMS } from "../state/reducers"
 
 @Component({
   selector: "abk-visualise",
@@ -16,7 +17,7 @@ import { VisTab } from "../analyse/model/flow.model"
 export class VisualiseComponent implements OnInit {
   constructor(
     public uiStateStore: UIStateStore,
-    private contextStore: ContextStore,
+    private oss: ObservableState,
     private errorService: ErrorService
   ) {}
 
@@ -37,7 +38,14 @@ export class VisualiseComponent implements OnInit {
         }
       }
     ]
-    this.contextStore.addContextMenu(UiId.VISUALISE, cmItems)
+
+    // this.oss.dispatch({
+    //   type: ADD_CONTEXT_MENU_ITEMS,
+    //   payload: {
+    //     key: UiId.VISUALISE,
+    //     items: cmItems
+    //   }
+    // })
   }
 
   private checkSelectedVisType(visType: string): boolean {

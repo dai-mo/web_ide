@@ -1,10 +1,12 @@
 {
-  "name": "dcswebapp",
-  "version": "0.0.0",
-  "license": "MIT",
+  "name": "org.alambeek.ide.web",
+  "version": "0.1.0-SNAPSHOT",
+  "license": "",
   "scripts": {
+    "name": "echo $npm_package_name",
+    "version": "echo $npm_package_version",
     "ng": "ng",
-    "start": "ng serve -H 0.0.0.0 --disable-host-check",
+    "start": "ng serve",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",

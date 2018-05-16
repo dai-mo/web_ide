@@ -1,4 +1,4 @@
-import { ModalMessage } from "./ui.models"
+import { ModalMessage, ContextMenuItem, ContextBarItem } from "./ui.models"
 /**
  * Created by cmathew on 03.07.17.
  */
@@ -41,6 +41,12 @@ export const UPDATE_PROCESSOR_PROPERTIES_DIALOG_VISIBILITY =
   "UPDATE_PROCESSOR_PROPERTIES_DIALOG_VISIBILITY"
 
 export const NEW_MODAL_MESSAGE = "NEW_MODAL_MESSAGE"
+
+export const ADD_CONTEXT_MENU_ITEMS = "ADD_CONTEXT_MENU_ITEMS"
+export const REMOVE_CONTEXT_MENU_ITEMS = "REMOVE_CONTEXT_MENU_ITEMS"
+
+export const ADD_CONTEXT_BAR_ITEMS = "ADD_CONTEXT_BAR_ITEMS"
+export const REMOVE_CONTEXT_BAR_ITEMS = "REMOVE_CONTEXT_BAR_ITEMS"
 
 export class AppAction implements Action {
   type: string
@@ -238,6 +244,62 @@ export function connectMode(state: boolean = false, action: AppAction) {
   }
 }
 
+export function contextMenuItems(
+  state: Map<string, ContextMenuItem[]> = initialAppState.contextMenuItems,
+  action: AppAction
+) {
+  const newState = state
+  switch (action.type) {
+    case ADD_CONTEXT_MENU_ITEMS:
+      if (newState.has(action.payload.key)) {
+        const items = newState.get(action.payload.key)
+        items.push(...action.payload.items)
+      } else {
+        newState.set(action.payload.key, action.payload.items)
+      }
+      return newState
+    case REMOVE_CONTEXT_MENU_ITEMS:
+      if (newState.has(action.payload.key)) {
+        const items = newState.get(action.payload.key)
+        items.forEach(item => {
+          const index = items.indexOf(item)
+          items.splice(index, 1)
+        })
+      }
+      return newState
+    default:
+      return state
+  }
+}
+
+export function contextBarItems(
+  state: Map<string, ContextBarItem[]> = initialAppState.contextBarItems,
+  action: AppAction
+) {
+  const newState = state
+  switch (action.type) {
+    case ADD_CONTEXT_BAR_ITEMS:
+      if (newState.has(action.payload.key)) {
+        const items = newState.get(action.payload.key)
+        items.push(...action.payload.items)
+      } else {
+        newState.set(action.payload.key, action.payload.items)
+      }
+      return newState
+    case REMOVE_CONTEXT_BAR_ITEMS:
+      if (newState.has(action.payload.key)) {
+        const items = newState.get(action.payload.key)
+        items.forEach(item => {
+          const index = items.indexOf(item)
+          items.splice(index, 1)
+        })
+      }
+      return newState
+    default:
+      return state
+  }
+}
+
 export const rootReducer = {
   flowTabs,
   selectedEntity,
@@ -245,7 +307,9 @@ export const rootReducer = {
   currentProcessorProperties,
   selectedFlowEntityConf,
   connectMode,
-  visibility
+  visibility,
+  contextMenuItems,
+  contextBarItems
 }
 
 export function withParent<T>(

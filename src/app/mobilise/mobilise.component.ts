@@ -13,6 +13,6 @@ import { ObservableState } from "../state/state"
 export class MobiliseComponent {
   constructor(
     private uiStateStore: UIStateStore,
-    private oss: ObservableState
+    public oss: ObservableState
   ) {}
 }

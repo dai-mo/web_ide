@@ -20,7 +20,7 @@ import { Map } from "leaflet"
 import LatLng = L.LatLng
 import Marker = L.Marker
 
-import L = require("leaflet")
+import * as L from "leaflet"
 import { UIStateStore } from "../../state/ui.state.store"
 import { Provenance } from "../../analyse/model/flow.model"
 

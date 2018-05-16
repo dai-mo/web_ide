@@ -14,8 +14,5 @@ import { ObservableState } from "../state/state"
 export class LayoutComponent {
   uiId = UiId
 
-  constructor(
-    private uiStateStore: UIStateStore,
-    public oss: ObservableState
-  ) {}
+  constructor(public uiStateStore: UIStateStore, public oss: ObservableState) {}
 }
