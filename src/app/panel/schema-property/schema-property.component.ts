@@ -27,7 +27,7 @@ export class SchemaPropertyComponent implements OnInit {
 
   constructor(
     private uiStateStore: UIStateStore,
-    private oss: ObservableState,
+    public oss: ObservableState,
     private dndStore: DnDStore
   ) {
     this.parameters = []

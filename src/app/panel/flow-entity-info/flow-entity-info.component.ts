@@ -13,7 +13,7 @@ import { FieldGroup, Field, FieldUIType } from "../../state/fields"
 export class FlowEntityInfoComponent implements OnInit {
   @Input() entityFieldGroup: FieldGroup
   fields: Field[]
-  private form: FormGroup
+  form: FormGroup
   private fieldUIType = FieldUIType
 
   collect = function(): any {

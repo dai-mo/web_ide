@@ -42,7 +42,7 @@ export class RelationshipsComponent {
     private connectionService: ConnectionService,
     private flowService: FlowService,
     private errorService: ErrorService,
-    private uiStateStore: UIStateStore,
+    public uiStateStore: UIStateStore,
     private oss: ObservableState
   ) {
     this.flowInstanceId = this.oss.activeFlowTab().flowInstance.id

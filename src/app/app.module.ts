@@ -156,7 +156,6 @@ export function startupServiceFactory(http: Http, uss: UIStateStore): Function {
     ModalMessageComponent
   ],
   providers: [
-    { provide: Window, useValue: window },
     {
       provide: APP_INITIALIZER,
       useFactory: startupServiceFactory,

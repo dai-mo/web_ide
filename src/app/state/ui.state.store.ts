@@ -116,12 +116,12 @@ export class UIStateStore {
     sticky: false,
     delay: 3000
   })
-  private displayMesssages = this._displayMesssages.asObservable()
+  public displayMesssages = this._displayMesssages.asObservable()
 
   private _isSchemaUpdatable: BehaviorSubject<boolean> = new BehaviorSubject(
     false
   )
-  private isSchemaUpdatable = this._isSchemaUpdatable.asObservable()
+  isSchemaUpdatable = this._isSchemaUpdatable.asObservable()
 
   constructor(private ngZone: NgZone) {
     this.store = {

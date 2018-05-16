@@ -1,0 +1,42 @@
+
+pipeline:
+  restore-cache:
+    image: drillster/drone-volume-cache
+    restore: true
+    mount:
+      - ./node_modules
+    volumes:
+      - /tmp/cache:/cache:z
+  build:
+    image: node:9.11
+    commands:
+      - npm install
+      - ./build.sh
+  rebuild-cache:
+    image: drillster/drone-volume-cache
+    rebuild: true
+    mount:
+      - ./node_modules
+    volumes:
+      - /tmp/cache:/cache:z
+  artifactory:
+    image: athieriot/drone-artifactory
+    environment:
+      - DRONE_VERSION=0.8
+    group_id: org.alambeek
+    artifact_id: org.alambeek.ide.web
+    version: 0.1.0-SNAPSHOT
+    files:
+      - package/*.tgz
+    force_upload: true
+    secrets: [ artifactory_url, artifactory_username, artifactory_password ]
+    when:
+      branch: [ master, preview ]
+      status: [ success ]
+  slack:
+    image: plugins/slack
+    channel: builds
+    secrets: [ slack_webhook ]
+    when:
+      branch: [ master, preview ]
+      status: [ success, failure ]

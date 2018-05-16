@@ -22,7 +22,7 @@ export class ProcessorSchemaComponent {
   @ViewChild(SchemaPanelComponent) schemaPanelComponent: SchemaPanelComponent
 
   constructor(
-    private uiStateStore: UIStateStore,
+    public uiStateStore: UIStateStore,
     public oss: ObservableState,
     private flowService: FlowService,
     private errorService: ErrorService
