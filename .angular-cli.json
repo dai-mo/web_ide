@@ -31,7 +31,7 @@
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
-        "dev": "environments/environment.ts",
+        "dev": "../.env/environment.dev.ts",
         "prod": "environments/environment.prod.ts"
       }
     }
