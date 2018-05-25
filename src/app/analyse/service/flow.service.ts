@@ -40,8 +40,8 @@ export class FlowService extends ApiHttpService {
     if (options.headers == null) options.headers = new Headers()
     if (rpt !== undefined)
       options.headers.append("Authorization", "Bearer " + rpt)
-    if (this.flowClientId)
-      options.headers.append("flow-client-id", this.flowClientId)
+    if (ApiHttpService.flowClientId)
+      options.headers.append("flow-client-id", ApiHttpService.flowClientId)
     if (version !== "")
       options.headers.append("flow-component-version", version)
     return options

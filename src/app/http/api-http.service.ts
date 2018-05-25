@@ -8,19 +8,24 @@ import {
 import { Observable } from "rxjs/Observable"
 import { ServiceLocator } from "../app.component"
 import { ObservableState } from "../state/state"
+import { environment } from "../../environments/environment"
 
 /**
  * Created by cmathew on 21.06.17.
  */
 
 export class ApiHttpService {
+  // FIXME: Really bad hack to workaround client id
+  //        initialisation in app.module.ts
+  //        This should NOT be static
+  public static flowClientId: string
+
+  private apiBaseUrl = environment.apiBaseUrl
   protected http: Http
-  protected flowClientId: string
-  protected clientIdUrl: string = UIStateStore.appConfig.baseUrl + "/api/cid"
+  protected clientIdUrl: string = this.apiBaseUrl + "/api/cid"
 
   constructor() {
     this.http = ServiceLocator.injector.get(Http)
-    this.genClientId()
   }
 
   updateHeaders(
@@ -33,23 +38,26 @@ export class ApiHttpService {
 
     if (ro.headers == null) ro.headers = new Headers()
     if (rpt !== undefined) ro.headers.append("Authorization", "Bearer " + rpt)
-    if (this.flowClientId)
-      ro.headers.append("flow-client-id", this.flowClientId)
+    if (ApiHttpService.flowClientId)
+      ro.headers.append("flow-client-id", ApiHttpService.flowClientId)
     if (version !== "") ro.headers.append("flow-component-version", version)
     return ro
   }
 
   private apiUrl(url: string) {
-    return UIStateStore.appConfig.baseUrl + "/" + url
+    return this.apiBaseUrl + "/" + url
   }
 
-  genClientId(): void {
-    const ciu = this.clientIdUrl
-    this.http
-      .get(this.clientIdUrl)
-      .map(response => response.json())
-      .subscribe((cid: string) => (this.flowClientId = cid))
-  }
+  // genClientId(): void {
+  //   const ciu = this.clientIdUrl
+  //   this.http
+  //     .get(this.clientIdUrl)
+  //     .map(response => response.json())
+  //     .map((cid: string) => {
+  //       ApiHttpService.flowClientId = cid
+  //     })
+  //     .toPromise()
+  // }
 
   get<T>(url: string, rpt?: string, options?: RequestOptions): Observable<T> {
     return this.http
