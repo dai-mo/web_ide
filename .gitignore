@@ -43,6 +43,7 @@ Thumbs.db
 
 # Misc.
 package
+ext
 
 # NEVER EVER EVER commit these files
 .env
