@@ -1,0 +1,43 @@
+.dialog-container .ui-dialog {
+  width: 55% !important;
+  height: 70% !important;
+  // max-height: 580px !important;
+}
+
+.dialog-container .ui-dialog .ui-dialog-content {
+  height: calc(100% - 55px);
+}
+
+.ui-dialog-content .dialog-panel {
+  height: 100%;
+  overflow: auto;
+}
+
+.ui-widget-content {
+  border: none !important;
+}
+
+.mat-slider-track-background {
+  background-color: gray !important;
+}
+
+.mat-slider-thumb {
+  background-color: #1ab394 !important;
+  border: none !important;
+}
+
+.ui-inputtext:disabled {
+  border: none !important;
+}
+
+.ui-float-label > p-checkbox:focus ~ label,
+.ui-float-label > p-checkbox.ui-state-filled ~ label {
+  top: -0.75em;
+  font-size: 12px;
+}
+
+.ui-float-label .ui-dropdown,
+.ui-float-label .value,
+mat-slider.value {
+  width: 200px !important;
+}

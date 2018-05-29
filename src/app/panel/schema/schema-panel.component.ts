@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core"
-import { Processor, SchemaProperties } from "../../analyse/model/flow.model"
+import { Processor, SchemaProperties } from "../../model/flow.model"
 
 import { TreeNode } from "primeng/primeng"
 

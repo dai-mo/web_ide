@@ -12,7 +12,7 @@ import {
   PossibleValue,
   PropertyLevel,
   PropertyDefinition
-} from "../analyse/model/flow.model"
+} from "../model/flow.model"
 import {
   UPDATE_FLOW_INSTANCE,
   ADD_FLOW_TABS,
@@ -389,90 +389,6 @@ export abstract class FlowEntityConf {
   abstract finalise(uiStateStore: UIStateStore, data?: any): void
 
   abstract cancel(uiStateStore: UIStateStore): void
-}
-
-export class TemplateInfo extends FlowEntityConf {
-  constructor(flowTemplates: FlowTemplate[], private oss: ObservableState) {
-    super(oss)
-    flowTemplates.forEach(ft => {
-      this.flowEntities.push(new FlowEntity(ft.id, ft.name, ft.description))
-      this.flowEntityFieldGroupsMap.set(ft.id, this.genFieldGroups(ft))
-    })
-  }
-
-  genFieldGroups(flowTemplate: FlowTemplate): FieldGroup[] {
-    const description = new Field(
-      "description",
-      "description",
-      flowTemplate.description
-    )
-    const metadata = new FieldGroup("metadata", [description])
-    return [metadata]
-  }
-
-  finalise(uiStateStore: UIStateStore): void {
-    uiStateStore.updateFlowInstantiationId(this.selectedFlowEntityId)
-    uiStateStore.isTemplateInfoDialogVisible = false
-  }
-
-  cancel(uiStateStore: UIStateStore): void {
-    uiStateStore.isTemplateInfoDialogVisible = false
-  }
-}
-
-export class FlowCreation extends FlowEntityConf {
-  private readonly FLOW_NAME = "name"
-
-  constructor(
-    private oss: ObservableState,
-    private flowService: FlowService,
-    private errorService: ErrorService
-  ) {
-    super(oss)
-
-    this.selectedFlowEntityId = this.FLOW_NAME
-    this.flowEntities.push(new FlowEntity(this.FLOW_NAME, this.FLOW_NAME, ""))
-
-    const name: Field = new Field(
-      this.FLOW_NAME,
-      this.FLOW_NAME,
-      "Flow Name",
-      "",
-      [],
-      FieldType.STRING,
-      "",
-      true,
-      true
-    )
-    this.flowEntityFieldGroupsMap.set(this.FLOW_NAME, [
-      new FieldGroup("Flow Details", [name])
-    ])
-    this.select(this.selectedFlowEntityId)
-  }
-
-  finalise(uiStateStore: UIStateStore, data?: any): void {
-    KeycloakService.withTokenUpdate(
-      function(rpt: string) {
-        this.flowService.create(data.name, rpt).subscribe(
-          (flowInstance: FlowInstance) => {
-            const tab = UIUtils.toFlowTab(flowInstance)
-            this.oss.dispatch({
-              type: ADD_FLOW_TABS,
-              payload: { flowTabs: [tab] }
-            })
-            uiStateStore.setFlowCreationDialogVisible(false)
-          },
-          (error: any) => {
-            this.errorService.handleError(error)
-          }
-        )
-      }.bind(this)
-    )
-  }
-
-  cancel(uiStateStore: UIStateStore): void {
-    uiStateStore.isFlowCreationDialogVisible = false
-  }
 }
 
 export class ProcessorConf extends FlowEntityConf {

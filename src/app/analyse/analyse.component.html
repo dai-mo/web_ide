@@ -1,17 +1,12 @@
 <abk-flow-tabs class="fill" [instantiateFlow]="uiStateStore.flowInstantiationObs | async">
 </abk-flow-tabs>
 
-<p-dialog class="dialog-panel" header="Templates" width="900" [resizable]="false" [closable]="false" [(visible)]="uiStateStore.isTemplateInfoDialogVisible"
-  *ngIf="uiStateStore.isTemplateInfoDialogVisible">
-  <abk-flow-entity finaliseLabel="Instantiate Flow">
-  </abk-flow-entity>
-</p-dialog>
 
-<p-dialog class="dialog-panel" header="Create Flow" width="900" [resizable]="false" [closable]="false" [(visible)]="uiStateStore.isFlowCreationDialogVisible"
-  *ngIf="uiStateStore.isFlowCreationDialogVisible">
-  <abk-flow-entity finaliseLabel="Create">
-  </abk-flow-entity>
-</p-dialog>
+<app-item-list-dialog [dialogItemConf]="oss.selectedFlowEntityConf$() | async" [finaliseLabel]="'Load'" [dialogHeader]="'Select Data Flow'"
+  [isVisible]="uiStateStore.isTemplateInfoDialogVisible"></app-item-list-dialog>
+
+<app-item-list-dialog [dialogItemConf]="oss.selectedFlowEntityConf$() | async" [finaliseLabel]="'Create'" [dialogHeader]="'Create Data Flow'"
+  [isVisible]="uiStateStore.isFlowCreationDialogVisible"></app-item-list-dialog>
 
 <p-dialog class="dialog-panel" header="Output Schema" width="500" [resizable]="true" [closable]="false" [(visible)]="uiStateStore.isProcessorSchemaDialogVisible"
   *ngIf="uiStateStore.isProcessorSchemaDialogVisible">

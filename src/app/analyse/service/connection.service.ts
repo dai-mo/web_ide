@@ -7,7 +7,7 @@ import {
   ConnectionConfig,
   Connection,
   FlowComponent
-} from "../model/flow.model"
+} from "../../model/flow.model"
 
 /**
  * Created by cmathew on 20.07.17.

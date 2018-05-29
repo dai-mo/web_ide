@@ -12,7 +12,7 @@ import {
   Processor,
   Entity,
   EntityType
-} from "../analyse/model/flow.model"
+} from "../model/flow.model"
 import { initialAppState } from "./state"
 import { Visibility } from "./ui.state.store"
 

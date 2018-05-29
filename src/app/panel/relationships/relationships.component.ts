@@ -12,7 +12,7 @@ import {
   Processor,
   RemoteRelationship,
   RemoteProcessor
-} from "../../analyse/model/flow.model"
+} from "../../model/flow.model"
 import { FlowUtils } from "../../util/ui.utils"
 import { ConnectionService } from "../../analyse/service/connection.service"
 import { ErrorService } from "../../service/error.service"

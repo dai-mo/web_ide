@@ -4,7 +4,7 @@
 
 import { Injectable, NgZone } from "@angular/core"
 
-import { FlowGraph, EntityType } from "../model/flow.model"
+import { FlowGraph, EntityType } from "../../model/flow.model"
 import { UIStateStore } from "../../state/ui.state.store"
 import { ObservableState } from "../../state/state"
 import {

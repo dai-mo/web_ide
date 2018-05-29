@@ -4,7 +4,7 @@
 
 import { Component, Input, OnInit } from "@angular/core"
 import { SelectItem } from "primeng/components/common/api"
-import { Provenance, Action, EntityType } from "../../analyse/model/flow.model"
+import { Provenance, Action, EntityType } from "../../model/flow.model"
 import { FlowService } from "../../analyse/service/flow.service"
 import { ObservableState } from "../../state/state"
 import { ErrorService } from "../../service/error.service"

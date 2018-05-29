@@ -105,7 +105,9 @@ import { ObservableState } from "./state/state"
 import { rootReducer, NEW_MODAL_MESSAGE } from "./state/reducers"
 import { ModalMessageComponent } from "./panel/modal-message/modal-message.component"
 import { ModalMessage } from "./state/ui.models"
+import { PropertiesModule } from "@blang/properties"
 import { environment } from "../environments/environment"
+import { MessageService } from "primeng/components/common/messageservice"
 
 export const routes: Routes = [{ path: "", component: LayoutComponent }]
 
@@ -173,11 +175,13 @@ export function startupServiceFactory(http: Http, uss: UIStateStore): Function {
     MapService,
     FlowGraphService,
     SchemaService,
-    ObservableState
+    ObservableState,
+    MessageService
   ],
   imports: [
     // Alambeek Imports follow ...
     StoreModule.forRoot(rootReducer),
+    PropertiesModule,
     // Angular Imports follow ...
     BrowserAnimationsModule,
     HttpModule,

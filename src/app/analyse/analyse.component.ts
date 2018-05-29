@@ -1,3 +1,4 @@
+import { MessageService } from "primeng/components/common/messageservice"
 /**
  * Created by cmathew on 14/07/16.
  */
@@ -11,10 +12,10 @@ import {
 } from "@angular/core"
 import { FlowService } from "./service/flow.service"
 import { ErrorService } from "../service/error.service"
-import { FlowTemplate } from "./model/flow.model"
+
 import { UIStateStore } from "../state/ui.state.store"
 import { ContextMenuItem, UiId } from "../state/ui.models"
-import { FlowCreation, FlowEntityConf, TemplateInfo } from "../state/fields"
+import { FlowEntityConf } from "../state/fields"
 
 import { AppState, ObservableState } from "../state/state"
 import { Observable } from "rxjs/Observable"
@@ -22,6 +23,9 @@ import {
   UPDATE_SELECTED_FLOW_ENTITY_CONF,
   ADD_CONTEXT_MENU_ITEMS
 } from "../state/reducers"
+import { TemplateInfo } from "../state/item-conf/template-info"
+import { FlowCreation } from "../state/item-conf/flow-creation"
+import { FlowTemplate } from "../model/flow.model"
 
 @Component({
   selector: "abk-analyse",
@@ -32,24 +36,22 @@ export class AnalyseComponent implements OnInit {
   public status: { isopen: boolean } = { isopen: false }
   public templates: Array<any>
 
-  selectedFlowEntityConf: Observable<
-    FlowEntityConf
-  > = this.oss
-    .appStore()
-    .select((state: AppState) => state.selectedFlowEntityConf)
-
   constructor(
+    public oss: ObservableState,
     private flowService: FlowService,
-    private oss: ObservableState,
-    private errorService: ErrorService,
-    public uiStateStore: UIStateStore
+    public uiStateStore: UIStateStore,
+    private messageService: MessageService,
+    private errorService: ErrorService
   ) {}
 
   getTemplates() {
     this.flowService.templates().subscribe(
       templates => {
         this.templates = templates
-        const templateEntityInfo = new TemplateInfo(templates, this.oss)
+        const templateEntityInfo = new TemplateInfo(
+          templates,
+          this.uiStateStore
+        )
         this.oss.dispatch({
           type: UPDATE_SELECTED_FLOW_ENTITY_CONF,
           payload: { flowEntityConf: templateEntityInfo }
@@ -72,6 +74,8 @@ export class AnalyseComponent implements OnInit {
     const flowCreation = new FlowCreation(
       this.oss,
       this.flowService,
+      this.uiStateStore,
+      this.messageService,
       this.errorService
     )
     this.oss.dispatch({

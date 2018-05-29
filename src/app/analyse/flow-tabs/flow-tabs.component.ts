@@ -8,7 +8,7 @@ import {
   FlowTab,
   ProcessorDetails,
   ProcessorServiceDefinition
-} from "../model/flow.model"
+} from "../../model/flow.model"
 import { FlowService } from "../service/flow.service"
 import { ErrorService } from "../../service/error.service"
 import { KeycloakService } from "../../service/keycloak.service"
@@ -291,21 +291,6 @@ export class FlowTabsComponent implements OnInit {
         this.notificationService
       )
     }
-
-    // if(ppc !== undefined && !ppc.hasEntities()) {
-    //   this.uiStateStore.isProcessorPropertiesDialogVisible = false
-    //   this.notificationService
-    //     .warn({
-    //       title: "Processor Properties",
-    //       description: "No configurable properties for chosen processor"
-    //     })
-    // } else {
-    //   this.oss.dispatch({
-    //     type: UPDATE_SELECTED_FLOW_ENTITY_CONF,
-    //     payload: {flowEntityConf:  ppc}
-    //   })
-    //   this.uiStateStore.isProcessorPropertiesDialogVisible = true
-    // }
   }
 
   showProcessorConfDialog() {

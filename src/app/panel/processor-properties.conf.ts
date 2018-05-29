@@ -4,7 +4,7 @@ import {
   FlowInstance,
   Processor,
   PropertyDefinition
-} from "../analyse/model/flow.model"
+} from "../model/flow.model"
 import { FlowService } from "../analyse/service/flow.service"
 import { ErrorService } from "../service/error.service"
 import { ProcessorService } from "../service/processor.service"

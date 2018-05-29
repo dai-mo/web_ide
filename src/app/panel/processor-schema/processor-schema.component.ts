@@ -7,7 +7,7 @@ import {
   ErrorService,
   ValidationErrorResponse
 } from "../../service/error.service"
-import { Processor, FlowInstance } from "../../analyse/model/flow.model"
+import { Processor, FlowInstance } from "../../model/flow.model"
 import { UPDATE_FLOW_INSTANCE } from "../../state/reducers"
 
 /**
