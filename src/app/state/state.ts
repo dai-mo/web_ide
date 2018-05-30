@@ -2,8 +2,10 @@ import {
   Connection,
   FlowComponent,
   FlowTab,
-  EntityType
-} from "./../analyse/model/flow.model"
+  EntityType,
+  Processor,
+  Entity
+} from "./../model/flow.model"
 import { Observable } from "rxjs/Observable"
 import "rxjs/add/operator/take"
 
@@ -14,7 +16,6 @@ import { Action, Store } from "@ngrx/store"
 import { ImmutableArray, ImmutableObject } from "seamless-immutable"
 import * as SI from "seamless-immutable"
 
-import { Entity, Processor } from "../analyse/model/flow.model"
 // import { ContextBarItem, UiId, FlowEntityConf } from "./ui.models"
 import { AppAction } from "./reducers"
 import { Visibility } from "./ui.state.store"
@@ -145,6 +146,12 @@ export class ObservableState {
 
   visibility(): Visibility {
     return this.appState().visibility
+  }
+
+  selectedFlowEntityConf$(): Observable<FlowEntityConf> {
+    return this.appStore().select(
+      (state: AppState) => state.selectedFlowEntityConf
+    )
   }
 
   contextMenuItems$(key: string): Observable<ContextMenuItem[]> {

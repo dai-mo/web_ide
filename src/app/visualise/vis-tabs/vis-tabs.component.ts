@@ -5,7 +5,7 @@
 import { Component, Input } from "@angular/core"
 import { UiId } from "../../state/ui.models"
 import { UIStateStore } from "../../state/ui.state.store"
-import { VisTab } from "../../analyse/model/flow.model"
+import { VisTab } from "../../model/flow.model"
 
 @Component({
   selector: "abk-vis-tabs",

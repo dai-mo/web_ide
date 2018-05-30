@@ -8,7 +8,7 @@ import {
   Processor,
   Provenance,
   VisTab
-} from "../analyse/model/flow.model"
+} from "../model/flow.model"
 import { Msg, MsgGroup, UiId, ViewsVisible } from "./ui.models"
 import { ObservableState } from "../state/state"
 import { BehaviorSubject } from "rxjs/BehaviorSubject"
@@ -18,9 +18,6 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject"
 
 @Injectable()
 export class UIStateStore {
-
-  
-
   public store: {
     flowTabs: FlowTab[]
     visTabs: VisTab[]

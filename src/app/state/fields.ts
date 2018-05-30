@@ -8,11 +8,10 @@ import {
   RemoteRelationship,
   Configuration,
   MetaData,
-  ProcessorProperties,
   PossibleValue,
   PropertyLevel,
   PropertyDefinition
-} from "../analyse/model/flow.model"
+} from "../model/flow.model"
 import {
   UPDATE_FLOW_INSTANCE,
   ADD_FLOW_TABS,
@@ -26,6 +25,7 @@ import { FlowService } from "../analyse/service/flow.service"
 import { KeycloakService } from "../service/keycloak.service"
 import { UIUtils } from "../util/ui.utils"
 import { SelectItem } from "primeng/primeng"
+import { FieldVisibilityLevel } from "@blang/properties"
 
 export enum FieldType {
   STRING,
@@ -34,13 +34,8 @@ export enum FieldType {
   UNKNOWN
 }
 
-export enum FieldUIType {
-  UNKNOWN,
-  TEXT_NOT_EDITABLE,
-  TEXT_EDITABLE,
-  BOOLEAN,
-  VALUE_LIST,
-  SCHEMA_FIELD
+export enum ProcessorFieldUIType {
+  SCHEMA_FIELD = 5
 }
 
 export class Field {
@@ -56,7 +51,7 @@ export class Field {
   isRequired: boolean
   collector: () => any
   active = false
-  level: PropertyLevel = PropertyLevel.ClosedProperty
+  level = FieldVisibilityLevel.ClosedField
 
   static fieldType(type: string): FieldType {
     switch (type) {
@@ -103,7 +98,7 @@ export class Field {
     value: string = "",
     isEditable: boolean = false,
     isRequired: boolean = false,
-    level: PropertyLevel = PropertyLevel.ClosedProperty
+    level = FieldVisibilityLevel.ClosedField
   ) {
     this.name = name
     this.label = label
@@ -158,30 +153,6 @@ export class Field {
   setCollector(collector: () => any) {
     this.collector = collector
   }
-
-  fieldUIType(): FieldUIType {
-    if (this.isSchemaField()) return FieldUIType.SCHEMA_FIELD
-    if (typeof this.value === "string") {
-      if (this.possibleValues.length > 0) return FieldUIType.VALUE_LIST
-      if (!this.isEditable) return FieldUIType.TEXT_NOT_EDITABLE
-      return FieldUIType.TEXT_EDITABLE
-    }
-    if (typeof this.value === "boolean") {
-      return FieldUIType.BOOLEAN
-    }
-    return FieldUIType.UNKNOWN
-  }
-
-  isSchemaField(): boolean {
-    // FIXME: Change hack check to use field display 'level'
-    // return SchemaProperties.isSchemaProperty(this.label)
-    return ProcessorProperties.isSchemaProperty(this.level)
-  }
-
-  isHiddenPropertyField(): boolean {
-    // FIXME: Change hack check to use field display 'level'
-    return ProcessorProperties.isHiddenProperty(this.level)
-  }
 }
 
 export class FieldGroup {
@@ -189,103 +160,6 @@ export class FieldGroup {
   fields: Field[] = []
   active = false
   collector: () => any
-
-  static fromMetaData(metadata: MetaData): FieldGroup {
-    const fields: Field[] = []
-
-    fields.push(
-      new Field(
-        "description",
-        "description",
-        "",
-        "",
-        [],
-        FieldType.STRING,
-        metadata.description
-      )
-    )
-
-    const tagsStr = metadata.tags.reduce(function(agg: string, value: string) {
-      return agg === "" ? value : agg + " , " + value
-    }, "")
-
-    fields.push(
-      new Field("tags", "tags", "", "", [], FieldType.STRING, tagsStr)
-    )
-
-    const relatedStr = metadata.related.reduce(function(
-      agg: string,
-      value: string
-    ) {
-      return agg === "" ? value : agg + " , " + value
-    },
-    "")
-
-    fields.push(
-      new Field("related", "related", "", "", [], FieldType.STRING, relatedStr)
-    )
-    return new FieldGroup("metadata", fields)
-  }
-
-  static fromConfiguration(configuration: Configuration): FieldGroup {
-    const fields: Field[] = []
-
-    fields.push(
-      new Field(
-        "processor class",
-        "processor class",
-        "",
-        "",
-        [],
-        FieldType.STRING,
-        configuration.processorClassName
-      )
-    )
-    fields.push(
-      new Field(
-        "stateful",
-        "stateful",
-        "",
-        "",
-        [],
-        FieldType.STRING,
-        configuration.stateful.toString()
-      )
-    )
-    fields.push(
-      new Field(
-        "trigger type",
-        "trigger type",
-        "",
-        "",
-        [],
-        FieldType.STRING,
-        configuration.triggerType
-      )
-    )
-
-    return new FieldGroup("configuration", fields)
-  }
-
-  static fromRelationships(relationships: RemoteRelationship[]): FieldGroup {
-    const fields: Field[] = []
-
-    relationships.forEach(r =>
-      fields.push(
-        new Field(
-          r.id,
-          r.id,
-          r.description,
-          "",
-          [],
-          FieldType.STRING,
-          r.description
-        )
-      )
-    )
-
-    return new FieldGroup("relationships", fields)
-  }
 
   constructor(label: string, fields: Field[] = []) {
     this.label = label
@@ -389,213 +263,4 @@ export abstract class FlowEntityConf {
   abstract finalise(uiStateStore: UIStateStore, data?: any): void
 
   abstract cancel(uiStateStore: UIStateStore): void
-}
-
-export class TemplateInfo extends FlowEntityConf {
-  constructor(flowTemplates: FlowTemplate[], private oss: ObservableState) {
-    super(oss)
-    flowTemplates.forEach(ft => {
-      this.flowEntities.push(new FlowEntity(ft.id, ft.name, ft.description))
-      this.flowEntityFieldGroupsMap.set(ft.id, this.genFieldGroups(ft))
-    })
-  }
-
-  genFieldGroups(flowTemplate: FlowTemplate): FieldGroup[] {
-    const description = new Field(
-      "description",
-      "description",
-      flowTemplate.description
-    )
-    const metadata = new FieldGroup("metadata", [description])
-    return [metadata]
-  }
-
-  finalise(uiStateStore: UIStateStore): void {
-    uiStateStore.updateFlowInstantiationId(this.selectedFlowEntityId)
-    uiStateStore.isTemplateInfoDialogVisible = false
-  }
-
-  cancel(uiStateStore: UIStateStore): void {
-    uiStateStore.isTemplateInfoDialogVisible = false
-  }
-}
-
-export class FlowCreation extends FlowEntityConf {
-  private readonly FLOW_NAME = "name"
-
-  constructor(
-    private oss: ObservableState,
-    private flowService: FlowService,
-    private errorService: ErrorService
-  ) {
-    super(oss)
-
-    this.selectedFlowEntityId = this.FLOW_NAME
-    this.flowEntities.push(new FlowEntity(this.FLOW_NAME, this.FLOW_NAME, ""))
-
-    const name: Field = new Field(
-      this.FLOW_NAME,
-      this.FLOW_NAME,
-      "Flow Name",
-      "",
-      [],
-      FieldType.STRING,
-      "",
-      true,
-      true
-    )
-    this.flowEntityFieldGroupsMap.set(this.FLOW_NAME, [
-      new FieldGroup("Flow Details", [name])
-    ])
-    this.select(this.selectedFlowEntityId)
-  }
-
-  finalise(uiStateStore: UIStateStore, data?: any): void {
-    KeycloakService.withTokenUpdate(
-      function(rpt: string) {
-        this.flowService.create(data.name, rpt).subscribe(
-          (flowInstance: FlowInstance) => {
-            const tab = UIUtils.toFlowTab(flowInstance)
-            this.oss.dispatch({
-              type: ADD_FLOW_TABS,
-              payload: { flowTabs: [tab] }
-            })
-            uiStateStore.setFlowCreationDialogVisible(false)
-          },
-          (error: any) => {
-            this.errorService.handleError(error)
-          }
-        )
-      }.bind(this)
-    )
-  }
-
-  cancel(uiStateStore: UIStateStore): void {
-    uiStateStore.isFlowCreationDialogVisible = false
-  }
-}
-
-export class ProcessorConf extends FlowEntityConf {
-  constructor(
-    defs: ProcessorServiceDefinition[],
-    private oss: ObservableState,
-    private flowService: FlowService,
-    private processorService: ProcessorService,
-    private errorService: ErrorService
-  ) {
-    super(oss)
-    defs.forEach(d =>
-      this.flowEntities.push(
-        new FlowEntity(
-          d.processorServiceClassName,
-          d.processorServiceClassName,
-          "",
-          FlowEntityStatus.OK,
-          d
-        )
-      )
-    )
-    if (this.flowEntities.length === 1) this.select(this.flowEntities[0].id)
-  }
-
-  select(flowEntityId: string): void {
-    const selectedFlowEntity = this.flowEntities.find(
-      fe => fe.id === flowEntityId
-    )
-    if (selectedFlowEntity !== undefined) {
-      let details: Observable<ProcessorDetails>
-      if (selectedFlowEntity.state.stateful !== undefined)
-        details = this.processorService.details(
-          flowEntityId,
-          selectedFlowEntity.state.stateful
-        )
-      else details = this.processorService.details(flowEntityId)
-      details.subscribe(
-        (pdetails: ProcessorDetails) => {
-          this.flowEntityFieldGroupsMap.set(flowEntityId, [
-            FieldGroup.fromMetaData(pdetails.metadata),
-            FieldGroup.fromConfiguration(pdetails.configuration),
-            FieldGroup.fromRelationships(pdetails.relationships)
-          ])
-          super.select(flowEntityId)
-        },
-        (error: any) => {
-          this.errorService.handleError(error)
-        }
-      )
-    }
-  }
-
-  finalise(uiStateStore: UIStateStore): void {
-    const selectedFlowEntity = this.flowEntities.find(
-      fe => fe.id === this.selectedFlowEntityId
-    )
-    const flowInstanceId = this.oss.activeFlowTab().flowInstance.id
-    if (flowInstanceId !== undefined && selectedFlowEntity !== undefined)
-      this.processorService
-        .create(flowInstanceId, selectedFlowEntity.state)
-        .subscribe(
-          (processor: Processor) => {
-            uiStateStore.isProcessorConfDialogVisible = false
-            this.flowService
-              .instance(this.oss.activeFlowTab().flowInstance.id)
-              .subscribe(
-                (flowInstance: FlowInstance) => {
-                  this.oss.dispatch({
-                    type: UPDATE_FLOW_INSTANCE,
-                    payload: {
-                      flowInstance: flowInstance
-                    }
-                  })
-                },
-                (error: any) => {
-                  this.errorService.handleError(error)
-                }
-              )
-          },
-          (error: any) => {
-            this.errorService.handleError(error)
-          }
-        )
-  }
-
-  cancel(uiStateStore: UIStateStore): void {
-    uiStateStore.isProcessorConfDialogVisible = false
-  }
-}
-
-export class ProcessorInfo extends FlowEntityConf {
-  constructor(
-    processorServiceClassName: string,
-    processorDetails: ProcessorDetails,
-    private oss: ObservableState,
-    private processorService: ProcessorService,
-    private errorService: ErrorService
-  ) {
-    super(oss)
-    this.flowEntities.push(
-      new FlowEntity(
-        processorServiceClassName,
-        processorServiceClassName,
-        "",
-        FlowEntityStatus.OK,
-        processorServiceClassName
-      )
-    )
-    this.flowEntityFieldGroupsMap.set(processorServiceClassName, [
-      FieldGroup.fromMetaData(processorDetails.metadata),
-      FieldGroup.fromConfiguration(processorDetails.configuration),
-      FieldGroup.fromRelationships(processorDetails.relationships)
-    ])
-    this.hideCancel = true
-    super.select(processorServiceClassName)
-  }
-
-  finalise(uiStateStore: UIStateStore): void {
-    uiStateStore.isProcessorInfoDialogVisible = false
-  }
-
-  cancel(uiStateStore: UIStateStore): void {
-    uiStateStore.isProcessorInfoDialogVisible = false
-  }
 }

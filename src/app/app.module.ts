@@ -83,8 +83,6 @@ import { WsViewComponent } from "./layout/ws-view/ws-view.component"
 import { ResizeDirective } from "./layout/resize.directive"
 import { FlowTabsComponent } from "./analyse/flow-tabs/flow-tabs.component"
 import { ContentComponent } from "./mobilise/content/content.component"
-import { FlowEntityComponent } from "./panel/flow-entity/flow-entity.component"
-import { FlowEntityInfoComponent } from "./panel/flow-entity-info/flow-entity-info.component"
 import { ProcessorSchemaComponent } from "./panel/processor-schema/processor-schema.component"
 import { SchemaPanelComponent } from "./panel/schema/schema-panel.component"
 import { SchemaPropertyComponent } from "./panel/schema-property/schema-property.component"
@@ -105,7 +103,11 @@ import { ObservableState } from "./state/state"
 import { rootReducer, NEW_MODAL_MESSAGE } from "./state/reducers"
 import { ModalMessageComponent } from "./panel/modal-message/modal-message.component"
 import { ModalMessage } from "./state/ui.models"
+import { PropertiesModule, DynamicService } from "@blang/properties"
 import { environment } from "../environments/environment"
+import { MessageService } from "primeng/components/common/messageservice"
+
+import { DynamicPanelComponent } from "./panel/dynamic-panel/dynamic-panel.component"
 
 export const routes: Routes = [{ path: "", component: LayoutComponent }]
 
@@ -145,15 +147,14 @@ export function startupServiceFactory(http: Http, uss: UIStateStore): Function {
     ChartComponent,
     VisTabsComponent,
     FlowGraphDirective,
-    FlowEntityComponent,
-    FlowEntityInfoComponent,
     ProcessorSchemaComponent,
     SchemaPanelComponent,
     SchemaPropertyComponent,
     FieldsToMapComponent,
     FieldActionsComponent,
     RelationshipsComponent,
-    ModalMessageComponent
+    ModalMessageComponent,
+    DynamicPanelComponent
   ],
   providers: [
     {
@@ -173,11 +174,14 @@ export function startupServiceFactory(http: Http, uss: UIStateStore): Function {
     MapService,
     FlowGraphService,
     SchemaService,
-    ObservableState
+    ObservableState,
+    MessageService,
+    DynamicService
   ],
   imports: [
     // Alambeek Imports follow ...
     StoreModule.forRoot(rootReducer),
+    PropertiesModule,
     // Angular Imports follow ...
     BrowserAnimationsModule,
     HttpModule,
@@ -248,6 +252,7 @@ export function startupServiceFactory(http: Http, uss: UIStateStore): Function {
     // Third Party import follow ...
     AngularSplitModule
   ],
+  entryComponents: [DynamicPanelComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

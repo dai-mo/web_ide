@@ -1,8 +1,9 @@
 import { Directive, ElementRef, Input } from "@angular/core"
 
 import { FlowService } from "../service/flow.service"
-import { FlowInstance } from "../model/flow.model"
+
 import { FlowGraphService } from "./flow-graph.service"
+import { FlowInstance } from "../../model/flow.model";
 
 @Directive({
   selector: "[flow-graph]"

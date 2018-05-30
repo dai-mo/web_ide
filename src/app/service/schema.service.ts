@@ -6,7 +6,7 @@ import { Injectable } from "@angular/core"
 import { Http } from "@angular/http"
 import { ApiHttpService } from "../http/api-http.service"
 
-import { Processor } from "../analyse/model/flow.model"
+import { Processor } from "../model/flow.model"
 
 import { Observable } from "rxjs/Observable"
 import { of } from "rxjs/observable/of"

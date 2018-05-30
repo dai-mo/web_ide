@@ -13,7 +13,7 @@ import {
   FlowTemplate,
   Provenance,
   RemoteProcessor
-} from "../model/flow.model"
+} from "../../model/flow.model"
 import { ErrorService } from "../../service/error.service"
 import { ApiHttpService } from "../../http/api-http.service"
 

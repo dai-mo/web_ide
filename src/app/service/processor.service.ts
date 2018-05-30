@@ -6,7 +6,7 @@ import {
   PropertyDefinition,
   ProcessorDetails,
   ProcessorServiceDefinition
-} from "../analyse/model/flow.model"
+} from "../model/flow.model"
 
 /**
  * Created by cmathew on 05.07.17.

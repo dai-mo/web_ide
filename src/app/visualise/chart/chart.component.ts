@@ -13,7 +13,7 @@ import {
   ElementRef
 } from "@angular/core"
 import { UIStateStore } from "../../state/ui.state.store"
-import { Provenance } from "../../analyse/model/flow.model"
+import { Provenance } from "../../model/flow.model"
 
 declare var Plotly: any
 

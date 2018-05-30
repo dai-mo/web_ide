@@ -5,6 +5,7 @@ import { SelectItem } from "primeng/primeng"
 import { UIStateStore } from "../../state/ui.state.store"
 import { ObservableState } from "../../state/state"
 import { DnDStore } from "../../state/dnd.store"
+import { DynamicComponent } from "@blang/properties"
 
 /**
  * Created by cmathew on 19.05.17.
@@ -14,7 +15,8 @@ import { DnDStore } from "../../state/dnd.store"
   templateUrl: "./schema-property.component.html",
   styleUrls: ["./schema-property.component.scss"]
 })
-export class SchemaPropertyComponent implements OnInit {
+export class SchemaPropertyComponent implements OnInit, DynamicComponent {
+  data: any
   @ViewChild(SchemaPanelComponent) schemaPanelComponent: SchemaPanelComponent
 
   @Input() schemaField: Field
@@ -44,6 +46,7 @@ export class SchemaPropertyComponent implements OnInit {
       }
     ] = JSON.parse(this.schemaField.defaultValue)
     sfs.forEach(sf => this.parameters.push({ label: sf.name, value: sf }))
+    this.data = this.schemaField
   }
 
   dragStart(event: any, parameter: any) {

@@ -22,7 +22,7 @@ import Marker = L.Marker
 
 import * as L from "leaflet"
 import { UIStateStore } from "../../state/ui.state.store"
-import { Provenance } from "../../analyse/model/flow.model"
+import { Provenance } from "../../model/flow.model"
 
 @Component({
   selector: "abk-map",

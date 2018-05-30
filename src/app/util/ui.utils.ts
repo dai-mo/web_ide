@@ -4,7 +4,7 @@ import {
   FlowInstance,
   FlowTab,
   Processor
-} from "../analyse/model/flow.model"
+} from "../model/flow.model"
 import * as SI from "seamless-immutable"
 import { isEmpty } from "rxjs/operator/isEmpty"
 

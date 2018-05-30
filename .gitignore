@@ -42,7 +42,9 @@ testem.log
 Thumbs.db
 
 # Misc.
+package-lock.json
 package
+ext
 
 # NEVER EVER EVER commit these files
 .env

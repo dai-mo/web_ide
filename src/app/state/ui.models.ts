@@ -9,13 +9,12 @@ import {
   PossibleValue,
   Processor,
   ProcessorDetails,
-  ProcessorProperties,
   ProcessorServiceDefinition,
   PropertyDefinition,
   PropertyLevel,
   RemoteRelationship,
   SchemaProperties
-} from "../analyse/model/flow.model"
+} from "../model/flow.model"
 import { UIStateStore } from "./ui.state.store"
 import { ProcessorService } from "../service/processor.service"
 import { ErrorService } from "../service/error.service"

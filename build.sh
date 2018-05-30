@@ -9,7 +9,7 @@ tar_dir="./${name}"
 tar_file="${tar_dir}-${version}.tgz"
 
 echo " ### Building Angular production application for ${name}, version ${version}"
-npm run build
+npm run build-prod
 
 echo "### Packaging Angular production application"
 mkdir -p package

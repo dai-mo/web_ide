@@ -15,23 +15,14 @@
   </p-tabView>
 </div>
 
-<p-dialog class="dialog-panel" header="Processor Properties" width="900" [resizable]="false" [closable]="false" [(visible)]="oss.visibility().isProcessorPropertiesDialogVisible"
-  *ngIf="oss.visibility().isProcessorPropertiesDialogVisible">
-  <abk-flow-entity finaliseLabel="Update">
-  </abk-flow-entity>
-</p-dialog>
+<app-item-list-dialog [dialogItemConf]="oss.selectedFlowEntityConf$() | async" [finaliseLabel]="'Update'" [dialogHeader]="'Processor Properties'"
+  [isVisible]="oss.visibility().isProcessorPropertiesDialogVisible" [dynamicItem]="dynamicItem"></app-item-list-dialog>
 
-<p-dialog class="dialog-panel" header="Processors" width="900" [resizable]="false" [closable]="false" [(visible)]="uiStateStore.isProcessorConfDialogVisible"
-  *ngIf="uiStateStore.isProcessorConfDialogVisible">
-  <abk-flow-entity finaliseLabel="Add">
-  </abk-flow-entity>
-</p-dialog>
+<app-item-list-dialog [dialogItemConf]="oss.selectedFlowEntityConf$() | async" [finaliseLabel]="'Add'" [dialogHeader]="'Processors'"
+  [isVisible]="uiStateStore.isProcessorConfDialogVisible"></app-item-list-dialog>
 
-<p-dialog class="dialog-panel" header="Processor Details" width="900" [resizable]="false" [closable]="false" [(visible)]="uiStateStore.isProcessorInfoDialogVisible"
-  *ngIf="uiStateStore.isProcessorInfoDialogVisible">
-  <abk-flow-entity finaliseLabel="Ok">
-  </abk-flow-entity>
-</p-dialog>
+<app-item-list-dialog [dialogItemConf]="oss.selectedFlowEntityConf$() | async" [finaliseLabel]="'Ok'" [dialogHeader]="'Processor Info'"
+  [isVisible]="uiStateStore.isProcessorInfoDialogVisible"></app-item-list-dialog>
 
 <p-dialog class="dialog-panel" header="Relationships" width="600" [resizable]="false" [closable]="false" [(visible)]="uiStateStore.isRelationshipsInfoDialogVisible || uiStateStore.isRelationshipsSettingsDialogVisible"
   *ngIf="uiStateStore.isRelationshipsInfoDialogVisible || uiStateStore.isRelationshipsSettingsDialogVisible">

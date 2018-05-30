@@ -6,7 +6,7 @@ import { Component, OnInit } from "@angular/core"
 import { UIStateStore } from "../state/ui.state.store"
 import { ErrorService } from "../service/error.service"
 import { ContextMenuItem, UiId } from "../state/ui.models"
-import { VisTab } from "../analyse/model/flow.model"
+import { VisTab } from "../model/flow.model"
 import { ADD_CONTEXT_MENU_ITEMS } from "../state/reducers"
 
 @Component({
