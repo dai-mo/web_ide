@@ -1,3 +1,4 @@
+import { MessageService } from "primeng/components/common/messageservice"
 import {
   EntityType,
   FlowInstance,
@@ -42,14 +43,14 @@ export class ProcessorProperties extends ItemConf {
   private processor: Processor
   private properties: any
   private propertiesFieldGroup: FieldGroup
-  private propertySpecificFields: Field[]
+  private propertySpecificFields: ProcessorPropertyField[]
 
   static fromPDef(
     pd: PropertyDefinition,
     value: string,
     isEditable: boolean
-  ): Field {
-    return new Field(
+  ): ProcessorPropertyField {
+    return new ProcessorPropertyField(
       pd.name,
       pd.displayName,
       pd.description,
@@ -90,28 +91,14 @@ export class ProcessorProperties extends ItemConf {
     private flowService: FlowService,
     private uiStateStore: UIStateStore,
     private errorService: ErrorService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private messageService: MessageService
   ) {
     super(true)
     this.processor = processor
     this.propertySpecificFields = []
-    const propertyFields: Field[] = []
 
-    propertyDefinitions.forEach((pd: PropertyDefinition) => {
-      const field: Field = ProcessorProperties.fromPDef(
-        pd,
-        this.processor.properties[pd.name],
-        true
-      )
-
-      if (!ProcessorProperties.isHiddenProperty(pd.level)) {
-        if (ProcessorProperties.isSchemaProperty(pd.level))
-          this.propertySpecificFields.push(field)
-        else propertyFields.push(field)
-      }
-    })
-
-    this.propertiesFieldGroup = new FieldGroup("properties", propertyFields)
+    this.propertiesFieldGroup = this.genFieldGroups(propertyDefinitions)
 
     if (
       this.propertiesFieldGroup.fields.length > 0 ||
@@ -136,6 +123,32 @@ export class ProcessorProperties extends ItemConf {
         )
       )
     }
+  }
+
+  invalid = (name: string, data: any) =>
+    this.messageService.add({
+      severity: "warn",
+      summary: "Input Validation",
+      detail: name + " is invalid"
+    })
+
+  genFieldGroups(propertyDefinitions: PropertyDefinition[]): FieldGroup {
+    const propertyFields: ProcessorPropertyField[] = []
+    propertyDefinitions.forEach((pd: PropertyDefinition) => {
+      const field: ProcessorPropertyField = ProcessorProperties.fromPDef(
+        pd,
+        this.processor.properties[pd.name],
+        true
+      )
+
+      if (!ProcessorProperties.isHiddenProperty(pd.level)) {
+        if (ProcessorProperties.isSchemaProperty(pd.level))
+          this.propertySpecificFields.push(field)
+        else propertyFields.push(field)
+      }
+    })
+
+    return new FieldGroup("properties", propertyFields, this.invalid)
   }
 
   postFinalise(data?: any): void {

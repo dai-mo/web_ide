@@ -105,9 +105,11 @@ import { ObservableState } from "./state/state"
 import { rootReducer, NEW_MODAL_MESSAGE } from "./state/reducers"
 import { ModalMessageComponent } from "./panel/modal-message/modal-message.component"
 import { ModalMessage } from "./state/ui.models"
-import { PropertiesModule } from "@blang/properties"
+import { PropertiesModule, DynamicService } from "@blang/properties"
 import { environment } from "../environments/environment"
 import { MessageService } from "primeng/components/common/messageservice"
+
+import { DynamicPanelComponent } from "./panel/dynamic-panel/dynamic-panel.component"
 
 export const routes: Routes = [{ path: "", component: LayoutComponent }]
 
@@ -155,7 +157,8 @@ export function startupServiceFactory(http: Http, uss: UIStateStore): Function {
     FieldsToMapComponent,
     FieldActionsComponent,
     RelationshipsComponent,
-    ModalMessageComponent
+    ModalMessageComponent,
+    DynamicPanelComponent
   ],
   providers: [
     {
@@ -176,7 +179,8 @@ export function startupServiceFactory(http: Http, uss: UIStateStore): Function {
     FlowGraphService,
     SchemaService,
     ObservableState,
-    MessageService
+    MessageService,
+    DynamicService
   ],
   imports: [
     // Alambeek Imports follow ...
@@ -252,6 +256,7 @@ export function startupServiceFactory(http: Http, uss: UIStateStore): Function {
     // Third Party import follow ...
     AngularSplitModule
   ],
+  entryComponents: [DynamicPanelComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

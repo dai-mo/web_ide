@@ -1,3 +1,5 @@
+import { SchemaPropertyComponent } from "./../../panel/schema-property/schema-property.component"
+import { MessageService } from "primeng/components/common/messageservice"
 import { Component, Input, OnInit } from "@angular/core"
 import {
   CoreProperties,
@@ -16,11 +18,7 @@ import { KeycloakService } from "../../service/keycloak.service"
 import { UIStateStore } from "../../state/ui.state.store"
 
 import { ContextBarItem, ContextMenuItem, UiId } from "../../state/ui.models"
-import {
-  FlowEntityConf,
-  ProcessorConf,
-  ProcessorInfo
-} from "../../state/fields"
+import { FlowEntityConf } from "../../state/fields"
 import { NotificationService } from "../../service/notification.service"
 import { AppState, ObservableState } from "../../state/state"
 import {
@@ -40,6 +38,10 @@ import { Observable } from "rxjs/Observable"
 import { UIUtils, FlowUtils } from "../../util/ui.utils"
 import { ConnectionService } from "../service/connection.service"
 import { ProcessorProperties } from "../../state/item-conf/processor-properties"
+import { ProcessorInfo } from "../../state/item-conf/processor-info"
+import { ProcessorList } from "../../state/item-conf/processor-list"
+import { DynamicItem } from "@blang/properties"
+import { DynamicPanelComponent } from "../../panel/dynamic-panel/dynamic-panel.component"
 
 @Component({
   selector: "abk-flow-tabs",
@@ -52,17 +54,14 @@ export class FlowTabsComponent implements OnInit {
 
   emptyTab: FlowTab
 
+  public dynamicItem: DynamicItem
+
   private stopFlowBarItem: ContextBarItem
   private startFlowBarItem: ContextBarItem
 
   flowTabs: Observable<FlowTab[]> = this.oss
     .appStore()
     .select((state: AppState) => state.flowTabs)
-  // selectedFlowEntityConf: Observable<
-  //   FlowEntityConf
-  // > = this.oss
-  //   .appStore()
-  //   .select((state: AppState) => state.selectedFlowEntityConf)
 
   constructor(
     private flowService: FlowService,
@@ -71,7 +70,8 @@ export class FlowTabsComponent implements OnInit {
     public oss: ObservableState,
     public uiStateStore: UIStateStore,
     private processorService: ProcessorService,
-    private connectionService: ConnectionService
+    private connectionService: ConnectionService,
+    private messageService: MessageService
   ) {
     this.nifiUrl =
       window.location.protocol + "//" + window.location.host + "/nifi"
@@ -81,6 +81,7 @@ export class FlowTabsComponent implements OnInit {
       { label: "Stop Flow" },
       { label: "Delete Flow" }
     ]
+    this.dynamicItem = new DynamicItem(DynamicPanelComponent)
   }
 
   public isRunning(flowTab: FlowTab) {
@@ -294,7 +295,8 @@ export class FlowTabsComponent implements OnInit {
             this.flowService,
             this.uiStateStore,
             this.errorService,
-            this.notificationService
+            this.notificationService,
+            this.messageService
           )
 
           if (!ppc.hasItems()) {
@@ -323,9 +325,10 @@ export class FlowTabsComponent implements OnInit {
   showProcessorConfDialog() {
     this.processorService.list().subscribe(
       (defs: ProcessorServiceDefinition[]) => {
-        const processorConf = new ProcessorConf(
+        const processorConf = new ProcessorList(
           defs,
           this.oss,
+          this.uiStateStore,
           this.flowService,
           this.processorService,
           this.errorService
@@ -352,9 +355,7 @@ export class FlowTabsComponent implements OnInit {
         const processorInfo = new ProcessorInfo(
           processorServiceClassName,
           processorDetails,
-          this.oss,
-          this.processorService,
-          this.errorService
+          this.uiStateStore
         )
         this.oss.dispatch({
           type: UPDATE_SELECTED_FLOW_ENTITY_CONF,
