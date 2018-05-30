@@ -83,8 +83,6 @@ import { WsViewComponent } from "./layout/ws-view/ws-view.component"
 import { ResizeDirective } from "./layout/resize.directive"
 import { FlowTabsComponent } from "./analyse/flow-tabs/flow-tabs.component"
 import { ContentComponent } from "./mobilise/content/content.component"
-import { FlowEntityComponent } from "./panel/flow-entity/flow-entity.component"
-import { FlowEntityInfoComponent } from "./panel/flow-entity-info/flow-entity-info.component"
 import { ProcessorSchemaComponent } from "./panel/processor-schema/processor-schema.component"
 import { SchemaPanelComponent } from "./panel/schema/schema-panel.component"
 import { SchemaPropertyComponent } from "./panel/schema-property/schema-property.component"
@@ -149,8 +147,6 @@ export function startupServiceFactory(http: Http, uss: UIStateStore): Function {
     ChartComponent,
     VisTabsComponent,
     FlowGraphDirective,
-    FlowEntityComponent,
-    FlowEntityInfoComponent,
     ProcessorSchemaComponent,
     SchemaPanelComponent,
     SchemaPropertyComponent,

@@ -10,8 +10,9 @@ pipeline:
   build:
     image: node:9.11
     commands:
-      - npm install
+      - npm install --unsafe-perm
       - ./build.sh
+    secrets: [ artifactory_url, artifactory_username, artifactory_password ]
   rebuild-cache:
     image: drillster/drone-volume-cache
     rebuild: true
