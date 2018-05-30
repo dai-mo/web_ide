@@ -9,7 +9,6 @@ import {
   PossibleValue,
   Processor,
   ProcessorDetails,
-  ProcessorProperties,
   ProcessorServiceDefinition,
   PropertyDefinition,
   PropertyLevel,

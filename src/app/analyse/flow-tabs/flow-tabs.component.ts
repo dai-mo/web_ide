@@ -7,7 +7,8 @@ import {
   FlowInstantiation,
   FlowTab,
   ProcessorDetails,
-  ProcessorServiceDefinition
+  ProcessorServiceDefinition,
+  PropertyDefinition
 } from "../../model/flow.model"
 import { FlowService } from "../service/flow.service"
 import { ErrorService } from "../../service/error.service"
@@ -31,13 +32,14 @@ import {
   UPDATE_FLOW_INSTANCE,
   UPDATE_FLOW_INSTANCE_STATE,
   UPDATE_SELECTED_FLOW_ENTITY_CONF,
-  ADD_CONTEXT_BAR_ITEMS
+  ADD_CONTEXT_BAR_ITEMS,
+  UPDATE_PROCESSOR_PROPERTIES_DIALOG_VISIBILITY
 } from "../../state/reducers"
 import { ProcessorService } from "../../service/processor.service"
 import { Observable } from "rxjs/Observable"
-import { UIUtils } from "../../util/ui.utils"
+import { UIUtils, FlowUtils } from "../../util/ui.utils"
 import { ConnectionService } from "../service/connection.service"
-import { ProcessorPropertiesConf } from "../../panel/processor-properties.conf"
+import { ProcessorProperties } from "../../state/item-conf/processor-properties"
 
 @Component({
   selector: "abk-flow-tabs",
@@ -56,11 +58,11 @@ export class FlowTabsComponent implements OnInit {
   flowTabs: Observable<FlowTab[]> = this.oss
     .appStore()
     .select((state: AppState) => state.flowTabs)
-  selectedFlowEntityConf: Observable<
-    FlowEntityConf
-  > = this.oss
-    .appStore()
-    .select((state: AppState) => state.selectedFlowEntityConf)
+  // selectedFlowEntityConf: Observable<
+  //   FlowEntityConf
+  // > = this.oss
+  //   .appStore()
+  //   .select((state: AppState) => state.selectedFlowEntityConf)
 
   constructor(
     private flowService: FlowService,
@@ -279,17 +281,42 @@ export class FlowTabsComponent implements OnInit {
 
   showProcessorPropertiesDialog() {
     const sp = this.oss.selectedProcessor()
-    let ppc
 
     if (sp !== undefined) {
-      ppc = new ProcessorPropertiesConf(
-        sp,
-        this.oss,
-        this.processorService,
-        this.flowService,
-        this.errorService,
-        this.notificationService
-      )
+      this.processorService
+        .properties(FlowUtils.processorServiceClassName(sp))
+        .subscribe((propertyDefinitions: PropertyDefinition[]) => {
+          const ppc = new ProcessorProperties(
+            sp,
+            propertyDefinitions,
+            this.oss,
+            this.processorService,
+            this.flowService,
+            this.uiStateStore,
+            this.errorService,
+            this.notificationService
+          )
+
+          if (!ppc.hasItems()) {
+            this.oss.dispatch({
+              type: UPDATE_PROCESSOR_PROPERTIES_DIALOG_VISIBILITY,
+              payload: false
+            })
+            this.notificationService.warn({
+              title: "Processor Properties",
+              description: "No configurable properties for chosen processor"
+            })
+          } else {
+            this.oss.dispatch({
+              type: UPDATE_SELECTED_FLOW_ENTITY_CONF,
+              payload: { flowEntityConf: ppc }
+            })
+            this.oss.dispatch({
+              type: UPDATE_PROCESSOR_PROPERTIES_DIALOG_VISIBILITY,
+              payload: true
+            })
+          }
+        })
     }
   }
 

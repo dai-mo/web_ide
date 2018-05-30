@@ -8,7 +8,6 @@ import {
   RemoteRelationship,
   Configuration,
   MetaData,
-  ProcessorProperties,
   PossibleValue,
   PropertyLevel,
   PropertyDefinition
@@ -26,6 +25,7 @@ import { FlowService } from "../analyse/service/flow.service"
 import { KeycloakService } from "../service/keycloak.service"
 import { UIUtils } from "../util/ui.utils"
 import { SelectItem } from "primeng/primeng"
+import { FieldVisibilityLevel } from "@blang/properties"
 
 export enum FieldType {
   STRING,
@@ -34,13 +34,8 @@ export enum FieldType {
   UNKNOWN
 }
 
-export enum FieldUIType {
-  UNKNOWN,
-  TEXT_NOT_EDITABLE,
-  TEXT_EDITABLE,
-  BOOLEAN,
-  VALUE_LIST,
-  SCHEMA_FIELD
+export enum ProcessorFieldUIType {
+  SCHEMA_FIELD = 5
 }
 
 export class Field {
@@ -56,7 +51,7 @@ export class Field {
   isRequired: boolean
   collector: () => any
   active = false
-  level: PropertyLevel = PropertyLevel.ClosedProperty
+  level = FieldVisibilityLevel.ClosedField
 
   static fieldType(type: string): FieldType {
     switch (type) {
@@ -103,7 +98,7 @@ export class Field {
     value: string = "",
     isEditable: boolean = false,
     isRequired: boolean = false,
-    level: PropertyLevel = PropertyLevel.ClosedProperty
+    level = FieldVisibilityLevel.ClosedField
   ) {
     this.name = name
     this.label = label
@@ -159,29 +154,18 @@ export class Field {
     this.collector = collector
   }
 
-  fieldUIType(): FieldUIType {
-    if (this.isSchemaField()) return FieldUIType.SCHEMA_FIELD
-    if (typeof this.value === "string") {
-      if (this.possibleValues.length > 0) return FieldUIType.VALUE_LIST
-      if (!this.isEditable) return FieldUIType.TEXT_NOT_EDITABLE
-      return FieldUIType.TEXT_EDITABLE
-    }
-    if (typeof this.value === "boolean") {
-      return FieldUIType.BOOLEAN
-    }
-    return FieldUIType.UNKNOWN
-  }
-
-  isSchemaField(): boolean {
-    // FIXME: Change hack check to use field display 'level'
-    // return SchemaProperties.isSchemaProperty(this.label)
-    return ProcessorProperties.isSchemaProperty(this.level)
-  }
-
-  isHiddenPropertyField(): boolean {
-    // FIXME: Change hack check to use field display 'level'
-    return ProcessorProperties.isHiddenProperty(this.level)
-  }
+  // fieldUIType(): FieldUIType {
+  //   if (this.isSchemaField()) return FieldUIType.SCHEMA_FIELD
+  //   if (typeof this.value === "string") {
+  //     if (this.possibleValues.length > 0) return FieldUIType.VALUE_LIST
+  //     if (!this.isEditable) return FieldUIType.TEXT_NOT_EDITABLE
+  //     return FieldUIType.TEXT_EDITABLE
+  //   }
+  //   if (typeof this.value === "boolean") {
+  //     return FieldUIType.BOOLEAN
+  //   }
+  //   return FieldUIType.UNKNOWN
+  // }
 }
 
 export class FieldGroup {

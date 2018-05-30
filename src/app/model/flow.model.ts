@@ -1,5 +1,5 @@
-import { ValidationErrorResponse } from "../service/error.service";
-
+import { ValidationErrorResponse } from "../service/error.service"
+import { FieldVisibilityLevel } from "@blang/properties"
 
 /**
  * Created by cmathew on 14/07/16.
@@ -60,33 +60,9 @@ export class SchemaProperties {
 }
 
 export enum PropertyLevel {
-  ClosedProperty = 0,
   ProcessorCoreProperty = 1,
   ProcessorSchemaProperty = 2,
-  ExternalProcessorProperty = 3,
-  OpenProperty = 100
-}
-
-export class ProcessorProperties {
-  static isExternalProcessorProperty(level: PropertyLevel): boolean {
-    return level === PropertyLevel.ExternalProcessorProperty
-  }
-
-  static isCoreProperty(level: PropertyLevel): boolean {
-    return level === PropertyLevel.ProcessorCoreProperty
-  }
-
-  static isHiddenProperty(level: PropertyLevel): boolean {
-    return (
-      level === PropertyLevel.ClosedProperty ||
-      level === PropertyLevel.ProcessorCoreProperty ||
-      level === PropertyLevel.ExternalProcessorProperty
-    )
-  }
-
-  static isSchemaProperty(level: PropertyLevel): boolean {
-    return level === PropertyLevel.ProcessorSchemaProperty
-  }
+  ExternalProcessorProperty = 3
 }
 
 export class ExternalProcessorProperties {
@@ -125,7 +101,7 @@ export class PropertyDefinition {
   sensitive: boolean
   dynamic: boolean
   type: string
-  level: PropertyLevel
+  level: number
 }
 
 export class Connectable {

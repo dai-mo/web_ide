@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core"
 import { FormControl, FormGroup, Validators } from "@angular/forms"
-import { FieldGroup, Field, FieldUIType } from "../../state/fields"
+import { FieldGroup, Field } from "../../state/fields"
 
 /**
  * Created by cmathew on 08.05.17.
@@ -14,7 +14,7 @@ export class FlowEntityInfoComponent implements OnInit {
   @Input() entityFieldGroup: FieldGroup
   fields: Field[]
   form: FormGroup
-  private fieldUIType = FieldUIType
+  // private fieldUIType = FieldUIType
 
   collect = function(): any {
     return this.form.value
