@@ -12,7 +12,24 @@
     "build-prod": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "licchkadd": "license-check-and-add"
+  },
+  "license-check-and-add-config": {
+    "folder": ".",
+    "license": "header.txt",
+    "exact_paths_method": "INCLUDE",
+    "exact_paths": [
+      "src"
+    ],
+    "file_type_method": "EXCLUDE",
+    "file_types": [
+      ".html",
+      ".txt",
+      ".json"
+    ],
+    "insert_license": true,
+    "clear_license": false
   },
   "private": true,
   "dependencies": {
@@ -41,6 +58,7 @@
     "font-awesome": "4.7",
     "keycloak-js": "2.4.0",
     "leaflet": "1.0.2",
+    "license-check-and-add": "^2.3.6",
     "moment": "2.13.0",
     "plotly.js": "1.20.5",
     "primeng": "5.2.4",

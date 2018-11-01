@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { AnalyseComponent } from "./../../analyse/analyse.component"
 /**
  * Created by cmathew on 13/07/16.

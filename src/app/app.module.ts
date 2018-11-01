@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { ApiHttpService, Health } from "./http/api-http.service"
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic"
 import { ModuleWithProviders, NgModule, APP_INITIALIZER } from "@angular/core"

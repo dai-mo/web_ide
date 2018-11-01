@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { Component, OnInit } from "@angular/core"
 import { FieldUIType, Field, DynamicComponent } from "@blang/properties"
 import { ProcessorFieldUIType } from "../../state/fields"

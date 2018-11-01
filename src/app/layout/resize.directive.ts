@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 /**
  * Created by cmathew on 13/07/16.
  */

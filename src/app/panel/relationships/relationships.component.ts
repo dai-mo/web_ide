@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { Component } from "@angular/core"
 import { UIStateStore } from "../../state/ui.state.store"
 import { ObservableState } from "../../state/state"

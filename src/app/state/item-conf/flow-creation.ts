@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { ObservableState } from "./../state"
 import { UIStateStore } from "./../ui.state.store"
 import {

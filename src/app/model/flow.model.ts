@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { ValidationErrorResponse } from "../service/error.service"
 import { FieldVisibilityLevel } from "@blang/properties"
 

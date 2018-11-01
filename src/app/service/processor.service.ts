@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { Injectable } from "@angular/core"
 import { ApiHttpService } from "../http/api-http.service"
 import { Observable } from "rxjs/Observable"

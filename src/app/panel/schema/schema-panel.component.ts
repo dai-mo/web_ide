@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { Component, Input, OnInit } from "@angular/core"
 import { Processor, SchemaProperties } from "../../model/flow.model"
 

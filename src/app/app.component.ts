@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { UIStateStore } from "./state/ui.state.store"
 /**
  * Created by cmathew on 12/07/16.

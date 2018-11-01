@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { ObservableState } from "./../state/state"
 /**
  * Created by cmathew on 14/07/16.

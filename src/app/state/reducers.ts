@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { ModalMessage, ContextMenuItem, ContextBarItem } from "./ui.models"
 /**
  * Created by cmathew on 03.07.17.

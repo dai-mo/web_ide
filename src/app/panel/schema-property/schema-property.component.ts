@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { Component, Input, OnInit, ViewChild } from "@angular/core"
 import { SchemaPanelComponent } from "../schema/schema-panel.component"
 import { Field } from "../../state/fields"

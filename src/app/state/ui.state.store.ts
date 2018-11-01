@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { Injectable, NgZone } from "@angular/core"
 import { Observable } from "rxjs/Observable"
 import {

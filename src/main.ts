@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { ModalMessage } from "./app/state/ui.models"
 import { NEW_MODAL_MESSAGE } from "./app/state/reducers"
 import { enableProdMode, ReflectiveInjector } from "@angular/core"

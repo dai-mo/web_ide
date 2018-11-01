@@ -1,3 +1,6 @@
+/*
+Copyright (c) 2017-2018 brewlabs SAS
+*/
 import { SchemaPropertyComponent } from "./../../panel/schema-property/schema-property.component"
 import { MessageService } from "primeng/components/common/messageservice"
 import { Component, Input, OnInit } from "@angular/core"
