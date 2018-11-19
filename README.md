@@ -1,4 +1,14 @@
-# Alambeek Web IDE Project
+# Daimo Web IDE Project
+
+This project is a [PrimeNg](https://www.primefaces.org/primeng)-based Angular Web IDE used to manage data flows executed on the Daimo platform.
+
+## Features
+
+The main features of this project include,
+
+- Visual representation of data flows
+- Possibility to clone existing flows or to generate new ones from scratch
+- Management and control of data flows
 
 # License
 
