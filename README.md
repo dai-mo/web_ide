@@ -1,4 +1,4 @@
-# Alambeek Angular Modules Project
+# Alambeek Web IDE Project
 
 # License
 
